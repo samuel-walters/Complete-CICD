@@ -12,7 +12,7 @@
 > 3. Run `sudo apt-get install fontconfig openjdk-11-jre`. 
 > 4. Run `sudo useradd -m jenkins`.
 > 5. Run `sudo -u jenkins mkdir /home/jenkins/.ssh`.
-> 6. In your **MASTER NODE**, type in ssh-keygen. Copy the public key (in the ~/.ssh directory).
+> 6. In your **MASTER NODE**, type in `ssh-keygen`. Copy the public key (in the ~/.ssh directory).
 > 7. In your **SLAVE NODE**, run `sudo -u jenkins nano /home/jenkins/.ssh/authorized_keys`. 
 > 8. Paste in the public key. Save and exit. 
 > 9. In your **MASTER NODE**, test the ssh connection with `ssh jenkins@ip-iphere` (take the ip from the **SLAVE NODE'**'s terminal).
