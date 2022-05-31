@@ -1,7 +1,7 @@
 # Set Up EC2 Instances
 > 1. Choose Ubuntu 20.04 for the EC2 instances.
 > 2. The master node must be T2 medium, and the agent nodes can be T2 micro.
-> 3. For their security groups, you must allow port 6443, port 443, and ports 30000 - 32767.
+> 3. For their security groups, you must allow port 6443, port 443, and ports 30000 - 32767 (and port 80). Make sure you allow your IP to SSH into the instances as well.
 
 # Run these commands on both your Master node and Agent node(s)
 
