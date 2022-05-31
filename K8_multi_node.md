@@ -78,7 +78,18 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 This command can be found at the bottom of the output found on the master node when you run `kubeadm token create --print-join-command`.
 
-Run kubectl get pods, and you should see an error.
+Run kubectl get pods, and you should see an error. Ignore it for now.
+
+### Enable ready state for nodes on master
+
+In your master node, run these commands to set up a ready state for your nodes:
+
+```bash
+export kubever=$(kubectl version | base64 | tr -d '\n')
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
+```
+
+Run `Run kubectl get nodes` to check the ready state.
 
 ### Dealing with the 8080 blocker
 
@@ -89,14 +100,3 @@ In your agent node, type `mkdir -p $HOME/.kube`.
 Navigate to `cd ~/.kube`.
 
 Type in `sudo nano config`, and paste all of the contents from admin.conf (from the master node).
-
-# Master node final commands
-
-In your master node, run these commands to set up a ready state for your nodes:
-
-```bash
-export kubever=$(kubectl version | base64 | tr -d '\n')
-kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$kubever"
-```
-
-Run `Run kubectl get nodes` to check the ready state.
