@@ -78,7 +78,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 This command can be found at the bottom of the output found on the master node when you run `kubeadm token create --print-join-command`.
 
-Run kubectl get pods, and you should see an error. Ignore it for now.
+Run kubectl get pods, and you should see an error. Ignore it for now (see "Dealing with the 8080 blocker below").
 
 ### Enable ready state for nodes on master
 
