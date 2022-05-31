@@ -62,6 +62,8 @@ Run the below command, but replace the ip address and the CIDR block. The ip add
 
 `kubeadm token create --print-join-command`
 
+Do not worry if you see a warning.
+
 ### Optional - run kubectl commands as non-root user
 Run these as a non-root user. This part is optional.
 ```bash
@@ -70,7 +72,7 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-# On your kubernete agent nodes only
+# On your agent nodes only
 
 ### Run the kubeadm join command
 
