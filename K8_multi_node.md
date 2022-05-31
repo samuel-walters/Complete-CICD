@@ -95,15 +95,16 @@ Run `Run kubectl get nodes` to check the ready state.
 
 In your master node, go to `cd /etc/kubernetes/`. Copy admin.conf with `cat admin.conf`.
 
-Run these commands if the above directory does not exist - otherwise **ignore this**:
-
-```bash 
-kubectl --kubeconfig=/etc/kubernetes/admin.conf cluster-info
-export KUBECONFIG=/etc/kubernetes/admin.conf
-```
-
 In your agent node, type `mkdir -p $HOME/.kube`.
 
 Navigate to `cd ~/.kube`.
 
 Type in `sudo nano config`, and paste all of the contents from admin.conf (from the master node).
+
+Run this commands if you are still getting errors, otherwise safely ignore this part:
+
+```bash 
+export KUBECONFIG=/etc/kubernetes/admin.conf
+```
+
+After running this commandm, try everything under this section again (starting underneath the "dealing with the 8080 blocker").
