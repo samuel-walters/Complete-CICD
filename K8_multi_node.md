@@ -3,7 +3,7 @@
 > 2. The master node must be T2 medium, and the agent nodes can be T2 micro.
 > 3. For their security groups, you must allow port 6443, port 443, and ports 30000 - 32767.
 
-# Run these commands in both Master and Node apps
+# Run these commands on both your Master node and Agent node(s)
 
 ### Login as root user and disable swap
 * Login as root user with `sudo su -`.
