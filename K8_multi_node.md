@@ -50,7 +50,8 @@ apt update && apt install -y kubeadm=1.18.5-00 kubelet=1.18.5-00 kubectl=1.18.5-
 
 ### Initialize Kubernetes Cluster
 
-Run the below command, but replace the ip address and the CIDR block. The ip address should be the one you can see in your master terminal, and the CIDR block should be the same one that the VPC uses.
+Run the below command, but replace the ip address and the CIDR block. The ip address should be the one you can see in your master terminal, and the CIDR block should be the same one that the VPC uses:
+
 `kubeadm init --apiserver-advertise-address=172.16.16.100 --pod-network-cidr=192.168.0.0/16  --ignore-preflight-errors=all`.
 
 ### Deploy Calico Network
