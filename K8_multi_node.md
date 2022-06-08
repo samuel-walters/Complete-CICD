@@ -1,7 +1,7 @@
 # Set Up EC2 Instances
 > 1. Choose Ubuntu 20.04 for the EC2 instances.
 > 2. The master node must be T2 medium, and the agent nodes can be T2 micro (depending on how many pods it will be running - sometimes T2 medium will be required).
-> 3. For their security groups, you must allow port 6443 (Custom TCP - kube-apiserver), port 443 (HTTPS), port 179 (Custom TCP - Calico networking (BGP)), and ports 30000 - 32767 (Custom TCP - Nodeport range) - and also port 3000 (Custom TCP - nodejs) and port 80 (http). Remember to also allow your IP to SSH into the instances as well.
+> 3. For their security groups, you must allow port 6443 (Custom TCP - kube-apiserver), ports 2379-2380 (etcd server client API), port 10250 (Kubelet API), port 10259 (Kubelet scheduler), port 10257 (kube-controller-manager), port 179 (Custom TCP - Calico networking (BGP)), and ports 30000 - 32767 (Custom TCP - Nodeport range) - and also port 3000 (Custom TCP - nodejs), 27017 (mongo), and port 80 (http). Remember to also allow your IP to SSH into the instances as well.
 
 # Run these commands on both your Master node and Agent node(s)
 
@@ -99,3 +99,7 @@ Navigate to `cd ~/.kube` in your agent node.
 In your agent node, type in `sudo nano config`, and paste all of the contents from admin.conf (which you should have copied from the master node admin.conf file).
 
 Run `kubectl get nodes`.
+
+### Useful commands for potential future use
+
+> 1. echo $(hostname -I | awk '{print $1}') - prints the ip address needed in the kubeadm init command.
