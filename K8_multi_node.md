@@ -1,8 +1,23 @@
 # Set Up EC2 Instances
 > 1. Choose Ubuntu 20.04 for the EC2 instances.
 > 2. The master node must be T2 medium, and the agent nodes can be T2 micro (depending on how many pods it will be running - sometimes T2 medium will be required).
-> 3. For their security groups, you must allow port 6443 (Custom TCP - kube-apiserver), ports 2379-2380 (etcd server client API), port 10250 (Kubelet API), port 10259 (Kubelet scheduler), port 10257 (kube-controller-manager), port 179 (Custom TCP - Calico networking (BGP)), and ports 30000 - 32767 (Custom TCP - Nodeport range) - and also port 3000 (Custom TCP - nodejs), 27017 (mongo), and port 80 (http). Remember to also allow your IP to SSH into the instances as well.
-
+> 3. For their security groups, you must allow these ports (and let yourself ssh into the instance):
+```
+port 6443 - Custom TCP - kube-apiserver
+port 443 - Custom TCP - kube-apiserver host
+ports 2379-2380 - Custom TCP - etcd server client API
+port 10250 - Custom TCP - Kubelet API
+port 10259 - Custom TCP - Kubelet scheduler 
+port 10257 - Custom TCP - kube-controller-manager
+port 10250 - 10265 - (to edit - is this needed?)
+port 179 Custom TCP - Calico networking (BGP)
+port 5473 Custom TCP - Typha (part of Calico)
+ports 30000 - 32767 - Custom TCP - Nodeport range
+port 3000 - Custom TCP - nodejs
+27017 - Custom TCP - mongo
+port 80 - (http)
+Remember to also allow your IP to SSH into the instances as well.
+```
 # Run these commands on both your Master node and Agent node(s)
 
 ### Login as root user and disable swap
