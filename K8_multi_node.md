@@ -9,7 +9,6 @@ ports 2379-2380 - Custom TCP - etcd server client API
 port 10250 - Custom TCP - Kubelet API
 port 10259 - Custom TCP - Kubelet scheduler 
 port 10257 - Custom TCP - kube-controller-manager
-port 10250 - 10265 - (to edit - is this needed?)
 port 179 Custom TCP - Calico networking (BGP)
 port 5473 Custom TCP - Typha (part of Calico)
 ports 30000 - 32767 - Custom TCP - Nodeport range
@@ -117,4 +116,5 @@ Run `kubectl get nodes`.
 
 ### Useful commands for potential future use
 
-> 1. echo $(hostname -I | awk '{print $1}') - prints the ip address needed in the kubeadm init command.
+> 1. `echo $(hostname -I | awk '{print $1}')` - Gets the ip address needed in the kubeadm init command.
+> 2. `kubeadm token create --print-join-command 2> /dev/null` - Prints just the join token (possible to use with IaC).
