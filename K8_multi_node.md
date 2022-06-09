@@ -118,3 +118,10 @@ Run `kubectl get nodes`.
 
 > 1. `echo $(hostname -I | awk '{print $1}')` - Gets the ip address needed in the kubeadm init command.
 > 2. `kubeadm token create --print-join-command 2> /dev/null` - Prints just the join token (possible to use with IaC).
+
+# Potential set up with IaC
+
+> 1. Make sure you are the root user.
+> 2. Initialise kubeadm: `kubeadm init --apiserver-advertise-address=$(hostname -I | awk '{print $1}') --pod-network-cidr=172.31.0.0/16 --ignore-preflight-errors=all`.
+> 3. Install calico network: `kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml`.
+> 4. Run `export KUBECONFIG=/etc/kubernetes/admin.conf`.
