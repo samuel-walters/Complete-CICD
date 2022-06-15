@@ -10,7 +10,6 @@
 > 8. Commit and push these changes to GitHub.
 > 9. In your repository on GitHub, go to `Settings` and then `Pages`. Configure it as follows:
 ![](https://i.imgur.com/zbLI9te.png)
-
 > 10. Wait until the `Pages` section says `Your site is published at url-here` at the top in green. 
 > 11. You can now add the repository with `helm repo add my-custom-local-repo-name https://samuel-walters.github.io/eng110-helm/` (use the link you see in the `Pages` section of the GitHub repository's settings).
 > 12. Run the command `helm repo update`.
