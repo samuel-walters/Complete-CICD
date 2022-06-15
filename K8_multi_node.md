@@ -80,13 +80,11 @@ Run the below command, but replace the ip address and the CIDR block. The ip add
 
 Do not worry if you see a warning.
 
-### Optional - run kubectl commands as non-root user
-Run these as a non-root user. This part is optional and you can skip it completely. 
-```bash
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-```
+### Install helm
+
+* Download helm with `curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3`.
+* Make the file executable with `chmod 700 get_helm.sh`.
+* Run the script with `./get_helm.sh`.
 
 # On Your Agent Nodes Only
 
@@ -113,6 +111,13 @@ Navigate to `cd ~/.kube` in your agent node.
 In your agent node, type in `sudo nano config`, and paste all of the contents from admin.conf (which you should have copied from the master node admin.conf file).
 
 Run `kubectl get nodes`.
+
+# On Your Master Node - Setting Up a Kubernetes Cluster with Helm
+
+> 1. Run `helm repo add custom_name_here https://samuel-walters.github.io/eng110-helm/`. Documentation for how to set up a helm repository on GitHub can be found [here](https://github.com/samuel-walters/Complete-CICD/blob/main/Set_Up_Helm_Repository.md).
+> 2. Run `helm repo update`.
+> 3. To find your new local helm repository, use the command `helm search repo`.
+> 4. To install the cluster, use this repository name in the following command: `helm install custom_name repositoryname`. For example, I would use the following command: `helm install custom_name_here custom_name_here/eng110-nodeapp`.
 
 ### Useful commands for potential future use
 
