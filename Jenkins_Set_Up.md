@@ -21,10 +21,10 @@
 
 # Configuration Details in the Browser
 
-> 1. On Jenkins in the browser (ip:8080), click on `Manage Jenkins` and then `Manage nodes and clouds`.
-> 2. Initial Administrator password: in your master node, run the command `sudo cat /var/lib/jenkins/secrets/initialAdminPassword` and paste it into the box.
-> 3. Allow yourself to pick custom plugins. Make sure `ssh agent` and `GitHub` are selected (and pick whatever plugins you desire - there will also be time to install plugins later with the Plugin Manager).
-> 4. After you have installed the plugins, choose details for your Admin User and click `save and continue`. 
+> 1. Go to Jenkins in the browser (master-node-public-ip:8080). For Initial Administrator password, run (in your master node) the command `sudo cat /var/lib/jenkins/secrets/initialAdminPassword` and paste it into the box.
+> 2. Allow yourself to pick custom plugins. Make sure `ssh agent` and `GitHub` are selected (and pick whatever plugins you desire - there will also be time to install plugins later with the Plugin Manager).
+> 3. After you have installed the plugins, choose details for your Admin User and click `save and continue`. 
+> 4. Click on `Manage Jenkins` and then `Manage nodes and clouds`.
 > 5. Click on `New Node`.
 > 6. Name it the same as your EC2 worker instance (for example `eng110-jenkins-worker`).
 > 7. Click `Permanent Agent`, and click `Create`. 
