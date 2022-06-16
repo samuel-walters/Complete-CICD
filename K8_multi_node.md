@@ -1,3 +1,7 @@
+# Architecture Diagram
+
+![](https://miro.medium.com/max/700/1*WHXv2Z0bBfC7GW4egoIwTw.png)
+
 # Set Up EC2 Instances
 > 1. Choose Ubuntu 20.04 for the EC2 instances.
 > 2. The master node must be T2 medium, and the agent nodes can be T2 micro.
