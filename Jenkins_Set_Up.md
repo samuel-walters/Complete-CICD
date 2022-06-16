@@ -25,10 +25,6 @@
 > 2. Initial Administrator password: in your master node, run the command `sudo cat /var/lib/jenkins/secrets/initialAdminPassword` and paste it into the box.
 > 3. Allow yourself to pick custom plugins. Make sure `ssh agent` and `GitHub` are selected (and pick whatever plugins you desire - there will also be time to install plugins later with the Plugin Manager).
 > 4. After you have installed the plugins, choose details for your Admin User and click `save and continue`. 
-
-
-
-
 > 5. Click on `New Node`.
 > 6. Name it the same as your EC2 worker instance (for example `eng110-jenkins-worker`).
 > 7. Click `Permanent Agent`, and click `Create`. 
