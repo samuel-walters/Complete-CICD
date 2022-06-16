@@ -19,6 +19,10 @@ Remember to also allow your IP to SSH into the instances as well.
 ```
 # Run these commands on both your Master node and Agent node(s)
 
+### Create meaningful names for all nodes
+
+Give your instances meaningful names with the command `sudo hostnamectl set-hostname "k8-master"`. You might name your worker nodes `k8-worker-node1` and `k8-worker-node2` for example.
+
 ### Login as root user and disable swap
 * Login as root user with `sudo su -`.
 * Disable swap: `swapoff -a; sed -i '/swap/d' /etc/fstab`. 
