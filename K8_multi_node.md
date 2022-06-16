@@ -1,6 +1,6 @@
 # Set Up EC2 Instances
 > 1. Choose Ubuntu 20.04 for the EC2 instances.
-> 2. The master node must be T2 medium, and the agent nodes can be T2 micro (depending on how many pods it will be running - sometimes T2 medium will be required).
+> 2. The master node must be T2 medium, and the agent nodes can be T2 micro.
 > 3. For their security groups, you must allow these ports (and let yourself ssh into the instance):
 ```
 port 6443 - Custom TCP - kube-apiserver
@@ -114,10 +114,10 @@ Run `kubectl get nodes`.
 
 # On Your Master Node - Setting Up a Kubernetes Cluster with Helm
 
-> 1. Run `helm repo add custom_name_here https://samuel-walters.github.io/eng110-helm/`. Documentation for how to set up a helm repository on GitHub can be found [here](https://github.com/samuel-walters/Complete-CICD/blob/main/Set_Up_Helm_Repository.md).
+> 1. Run `helm repo add custom-name-here https://samuel-walters.github.io/eng110-helm/`. Documentation for how to set up a helm repository on GitHub can be found [here](https://github.com/samuel-walters/Complete-CICD/blob/main/Set_Up_Helm_Repository.md).
 > 2. Run `helm repo update`.
 > 3. To find your new local helm repository, use the command `helm search repo`.
-> 4. To install the cluster, use this repository name in the following command: `helm install custom_name repositoryname`. For example, I would use the following command: `helm install custom_name_here custom_name_here/eng110-nodeapp`.
+> 4. To install the cluster, use this repository name in the following command: `helm install custom_name repositoryname`. For example, I would use the following command: `helm install custom-name-here custom-name-here/eng110-nodeapp`.
 
 ### Useful commands for potential future use
 
