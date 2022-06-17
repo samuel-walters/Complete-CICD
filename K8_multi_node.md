@@ -99,7 +99,7 @@ Do not worry if you see a warning.
 * Make the file executable with `chmod 700 get_helm.sh`.
 * Run the script with `./get_helm.sh`.
 
-# On Your Agent Nodes Only
+# Connecting the Agent Nodes
 
 ### Run the kubeadm join command
 
