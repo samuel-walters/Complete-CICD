@@ -52,6 +52,8 @@
 > 4. Click `Install without restart`. 
 > 5. Go to `Manage Jenkins` and then `Configure Global Security`. Tick the box that says `Role-Based Strategy`. Hit apply and then save.
 > 6. On `Manage Jenkins`, navigate to `Manage and Assign Roles`. Go to `Manage Roles`, and then add a role and tick the boxes you want the role to have permission for. The below image demonstrates an example of this:
+
 ![](https://i.imgur.com/KmFrA6Y.png)
 > 7. From `Manage and Assign Roles`, go to `Assign Roles`. Add the user you created and tick the appropriate role. This is an example of what your table might look like:
+
 ![](https://i.imgur.com/N1LP4EB.png)
