@@ -22,7 +22,7 @@
 # Configuration Details in the Browser
 
 > 1. Go to Jenkins in the browser (master-node-public-ip:8080). For Initial Administrator password, run (in your master node) the command `sudo cat /var/lib/jenkins/secrets/initialAdminPassword` and paste it into the box.
-> 2. Allow yourself to pick custom plugins. Make sure `ssh agent` and `GitHub` are selected (and pick whatever plugins you desire - there will also be time to install plugins later with the Plugin Manager).
+> 2. Allow yourself to pick custom plugins. Make sure `SSH agent`, `GitHub`, and `SSH` are selected (and pick whatever plugins you desire - there will also be time to install plugins later with the Plugin Manager).
 > 3. After you have installed the plugins, choose details for your Admin User and click `save and continue`. 
 > 4. Click on `Manage Jenkins` and then `Manage nodes and clouds`.
 > 5. Click on `New Node`.
@@ -43,3 +43,15 @@
 > 20. Select your key (should be able to see the description in this selection too). 
 > 21. For `Host Key Verification Strategy`, choose `Manually trusted key Verification Strategy`. 
 > 22. Click save, and run a build to test if it is working.
+
+# Creating Users and Setting up Permissions
+
+> 1. In your browser, click `Manage Jenkins` and then `Manage users`. Click `Create User` on the left-hand side.
+> 2. Click on `Manage Jenkins` again, and navigate to `Manage Plugins`. From here click on `Available`.
+> 3. Search for `roles` and tick `Role-based Authorization Strategy`. 
+> 4. Click `Install without restart`. 
+> 5. Go to `Manage Jenkins` and then `Configure Global Security`. Tick the box that says `Role-Based Strategy`. Hit apply and then save.
+> 6. On `Manage Jenkins`, navigate to `Manage and Assign Roles`. Go to `Manage Roles`, and then add a role and tick the boxes you want the role to have permission for. The below image demonstrates an example of this:
+![](https://i.imgur.com/KmFrA6Y.png)
+> 7. From `Manage and Assign Roles`, go to `Assign Roles`. Add the user you created and tick the appropriate role. This is an example of what your table might look like:
+![](https://i.imgur.com/N1LP4EB.png)
