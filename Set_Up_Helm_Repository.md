@@ -1,5 +1,10 @@
 # Set Up a Helm Repository on GitHub
 
+### Prerequisites 
+Before following the steps below, make sure you have Helm installed by typing the command `helm version` in your terminal. If it is not installed, navigate to Helm's official [installation page](https://helm.sh/docs/intro/install/) and follow the steps for your operating system.
+
+### Instructions
+
 > 1. Create a new repository on GitHub. Name it anything you want.
 > 2. Clone the repository - for example, with `git clone git@github.com:samuel-walters/eng110-helm.git`. 
 > 3. Create the directory charts with `mkdir charts`. Then inside charts (cd charts), create another directory where you will store all the yaml files. For example, you could try typing (inside charts) `mkdir eng110-nodeapp`.
