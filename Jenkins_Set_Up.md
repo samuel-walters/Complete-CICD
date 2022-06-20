@@ -24,25 +24,69 @@
 > 1. Go to Jenkins in the browser (master-node-public-ip:8080). For Initial Administrator password, run (in your master node) the command `sudo cat /var/lib/jenkins/secrets/initialAdminPassword` and paste it into the box.
 > 2. Allow yourself to pick custom plugins. Make sure `SSH agent`, `GitHub`, and `SSH` are selected (and pick whatever plugins you desire - there will also be time to install plugins later with the Plugin Manager).
 > 3. After you have installed the plugins, choose details for your Admin User and click `save and continue`. 
-> 4. Click on `Manage Jenkins` and then `Manage nodes and clouds`.
-> 5. Click on `New Node`.
-> 6. Name it the same as your EC2 worker instance (for example `eng110-jenkins-worker`).
-> 7. Click `Permanent Agent`, and click `Create`. 
-> 8. For `number of executors`, put `1`. 
-> 9. For `Remote root directory`, put in `/home/jenkins`.
-> 10. For `Labels`, put in the same Name (for example `eng110-jenkins-worker`).
-> 11. For `Usage`, put `Only build jobs with label expressions matching this node`.
-> 12. For `Launch method`, choose `Launch agents via SSH`. 
-> 13. For `Host`, put in the worker node's IP found in the terminal. For example (ubuntu@ip-**ipyouwanthere** -- only select the highlighted part). Remember to replace the dashes with dots.
-> 14. For `Credentials`, click `add` and choose `Jenkins`.
-> 15. Choose `SSH username with private key`. 
-> 16. Username should be `jenkins` (all lower-case).
-> 17. Click enter directly, and copy and paste the private key from your **MASTER NODE** (that looks like `id_rsa` and is located inside the ~/.ssh folder). 
-> 18. In the description, put `my jenkins private key`.
-> 19. Click `Add`.
-> 20. Select your key (should be able to see the description in this selection too). 
-> 21. For `Host Key Verification Strategy`, choose `Manually trusted key Verification Strategy`. 
-> 22. Click save, and run a build to test if it is working.
+
+# Configure a Cloud
+
+> 1. In the Jenkins `Plugin Manager`, search for `Amazon EC2 plugin` and install it without restarting.
+> 2. Go to `Configure Clouds` and select `Amazon EC2`.
+> 3. For `Amazon EC2 Name`, put a name like `my-ec2`.
+> 4. Add your EC2 Credentials. For `Kind`, remember to select `AWS Credentials`.
+> 5. Click apply and save.
+
+# Create an agent node
+
+> 1. Click on `Manage Jenkins` and then `Manage nodes and clouds`.
+> 2. Click on `New Node`.
+> 3. Name it the same as your EC2 worker instance (for example `eng110-jenkins-worker`).
+> 4. Click `Permanent Agent`, and click `Create`. 
+> 5. For `number of executors`, put `1`. 
+> 6. For `Remote root directory`, put in `/home/jenkins`.
+> 7. For `Labels`, put in the same Name (for example `eng110-jenkins-worker`).
+> 8. For `Usage`, put `Only build jobs with label expressions matching this node`.
+> 9. For `Launch method`, choose `Launch agents via SSH`. 
+> 10. For `Host`, put in the worker node's IP found in the terminal. For example (ubuntu@ip-**ipyouwanthere** -- only select the highlighted part). Remember to replace the dashes with dots.
+> 11. For `Credentials`, click `add` and choose `Jenkins`.
+> 12. Choose `SSH username with private key`. 
+> 13. Username should be `jenkins` (all lower-case).
+> 14. Click enter directly, and copy and paste the private key from your **MASTER NODE** (that looks like `id_rsa` and is located inside the ~/.ssh folder). 
+> 15. In the description, put `my jenkins private key`.
+> 16. Click `Add`.
+> 17. Select your key (should be able to see the description in this selection too). 
+> 18. For `Host Key Verification Strategy`, choose `Manually trusted key Verification Strategy`. 
+> 19. Click save, and run a build to test if it is working.
+
+# Set up AWS CLI
+
+> 1. Create a job, and run these commands on your worker node in the `Execute shell` part to install AWS CLI:
+```
+sudo apt-get update
+sudo apt-get install awscli -y
+aws --version
+```
+> 2. Check the console output to see if it has been installed correctly on the worker node. If sudo is not working, SSH into your worker node, and run `sudo nano /etc/sudoers`. Add (or modify if it exists) the line `jenkins ALL=(ALL) NOPASSWD: ALL`.
+> 3. Create a pipeline, and your script should look like this: 
+``` Groovy
+pipeline {
+    agent { label 'mynode' }
+    environment {
+        AWS_DEFAULT_REGION="eu-west-1"
+    }
+    stages {
+        stage('Hello') {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-credentials-aws', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) { 
+                    sh '''
+                        aws --version
+                        aws ec2 describe-instances
+                    '''
+                }
+            }
+        }
+    }
+}
+```
+> 4. This script relies upon the `Amazon EC2 plugin`. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
+
 
 # Creating Users and Setting up Permissions
 
