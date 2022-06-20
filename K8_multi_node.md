@@ -11,6 +11,8 @@ port 6443 - Custom TCP - kube-apiserver
 port 443 - Custom TCP - kube-apiserver (can be either 443 or 6443)
 ports 2379-2380 - Custom TCP - etcd server client API
 port 10250 - Custom TCP - Kubelet API
+port 10251 - Kube-scheduler
+port 10252 - Kube-controller-manager
 port 10259 - Custom TCP - Kubelet scheduler 
 port 10257 - Custom TCP - kube-controller-manager
 port 179 Custom TCP - Calico networking (BGP)
