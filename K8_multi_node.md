@@ -35,10 +35,6 @@ Give your instances meaningful names with the command `sudo hostnamectl set-host
 These commands allow IPtables to see bridged traffic.
 
 ```bash
-cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
-br_netfilter
-EOF
-
 cat >>/etc/sysctl.d/kubernetes.conf<<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
