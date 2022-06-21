@@ -118,7 +118,7 @@ Double check that you are the root user on your master and agent nodes. If you a
 
 ### Run the kubeadm join command
 
-This command can be found at the bottom of the output found on the master node when you run `kubeadm token create --print-join-command`.
+This command can be found at the bottom of the output on the master node when you run `kubeadm token create --print-join-command`.
 
 Run `kubectl get pods`, and you should see an error. We will deal with this blocker.
 
