@@ -4,25 +4,23 @@
 
 # Set Up EC2 Instances
 > 1. Choose Ubuntu 20.04 for the EC2 instances.
-> 2. The master node must be T2 medium, and the agent nodes can be T2 micro.
-> 3. For their security groups, you must allow these ports (and let yourself ssh into the instance):
-```
-port 6443 - Custom TCP - kube-apiserver
-port 443 - Custom TCP - kube-apiserver (can be either 443 or 6443)
-ports 2379-2380 - Custom TCP - etcd server client API
-port 10250 - Custom TCP - Kubelet API
-port 10251 - Kube-scheduler
-port 10252 - Kube-controller-manager
-port 10259 - Custom TCP - Kubelet scheduler 
-port 10257 - Custom TCP - kube-controller-manager
-port 179 Custom TCP - Calico networking (BGP)
-port 5473 Custom TCP - Typha (part of Calico)
-ports 30000 - 32767 - Custom TCP - Nodeport range
-port 3000 - Custom TCP - nodejs
-27017 - Custom TCP - mongo
-port 80 - (http)
-Remember to also allow your IP to SSH into the instances as well.
-```
+> 2. The master node (i.e. the controlplane) must be T2 medium, and the agent/worker nodes can be T2 micro.
+> 3. For their security groups, you must allow these ports (and remember to let yourself ssh into the instance as well):
+
+| Protocol | Port Range  | Purpose           |
+|----------|-------------|-------------------|
+| TCP      | 443         | Kubernetes API server (can also be 6443) |
+| TCP      | 6443        | Kubernetes API server|
+| TCP      | 2379-2380   | etcd server client API|
+| TCP      | 10250       | Kubelet API|
+| TCP      | 10259       | Kube-scheduler|
+| TCP      | 10257       | Kube-controller-manager|
+| TCP      | 30000 - 32767 | Nodeport range|
+| TCP      | 6783 |  Weave’s control and data ports|
+| TCP      | 6784 |  Weave Net daemon|
+| UDP      | 6783 - 6784 |  Weave’s control and data ports|
+
+
 # Run these commands on both your Master node and Agent node(s)
 
 ### Create meaningful names for all nodes
@@ -62,6 +60,7 @@ Copy and paste all of this into your terminal in one go.
 ```
 
 ### Kubernetes Setup
+
 #### Add Apt Repository
 Copy and paste this block into your terminal in one go.
 ```bash
@@ -73,11 +72,17 @@ Copy and paste this block into your terminal in one go.
 
 #### Install Specific Versions
 
+Regardless of whether you want to use the below versions or not, ensure that kubeadm, kubelet and kubectl are running on the **same** version. In this case, 1.18.5-00 is used, as seen by the command below:
+
 ```bash
 apt update && apt install -y kubeadm=1.18.5-00 kubelet=1.18.5-00 kubectl=1.18.5-00
 ```
 
 # On Your Master Node Only
+
+### Switch to root user
+
+Double check that you are the root user. If you are not, run the "`sudo su -`" command again.
 
 ### Initialize Kubernetes Cluster
 
@@ -85,15 +90,19 @@ Run the below command, but replace the ip address and the CIDR block. The ip add
 
 `kubeadm init --apiserver-advertise-address=172.16.16.100 --pod-network-cidr=192.168.0.0/16  --ignore-preflight-errors=all`.
 
-### Deploy Calico Network
+After it has initialised, create the admin.conf file by running this command: `export KUBECONFIG=/etc/kubernetes/admin.conf`
 
-`kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml`
+### Deploy Weave Network
+
+Weave Net is a resilient and simple to use network for Kubernetes. It provides a network to connect all the pods together, and to set it up simply run the command below:
+
+`kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"`
+
+Comprehensive documentation for integrating weave into your cluster can be found on [Weave's official website](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/).
 
 ### Cluster Join Command 
 
 `kubeadm token create --print-join-command`
-
-Do not worry if you see a warning.
 
 ### Install helm
 
@@ -103,19 +112,17 @@ Do not worry if you see a warning.
 
 # Connecting the Agent Nodes
 
+### Switch to root user on both master and agent nodes
+
+Double check that you are the root user on your master and agent nodes. If you are not, run the `sudo su -` command again.
+
 ### Run the kubeadm join command
 
 This command can be found at the bottom of the output found on the master node when you run `kubeadm token create --print-join-command`.
 
-Run kubectl get pods, and you should see an error. We will deal with this blocker.
+Run `kubectl get pods`, and you should see an error. We will deal with this blocker.
 
 ### Dealing with the 8080 blocker
-
-Run this command in your master node:
-
-```bash 
-export KUBECONFIG=/etc/kubernetes/admin.conf
-```
 
 In your master node, go to `cd /etc/kubernetes/`. Copy admin.conf with `cat admin.conf`.
 
@@ -136,12 +143,5 @@ Run `kubectl get nodes`.
 
 ### Useful commands for potential future use
 
-> 1. `echo $(hostname -I | awk '{print $1}')` - Gets the ip address needed in the kubeadm init command.
-> 2. `kubeadm token create --print-join-command 2> /dev/null` - Prints just the join token (possible to use with IaC).
-
-# Potential set up with IaC
-
-> 1. Make sure you are the root user.
-> 2. Initialise kubeadm: `kubeadm init --apiserver-advertise-address=$(hostname -I | awk '{print $1}') --pod-network-cidr=172.31.0.0/16 --ignore-preflight-errors=all`.
-> 3. Install calico network: `kubectl --kubeconfig=/etc/kubernetes/admin.conf create -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml`.
-> 4. Run `export KUBECONFIG=/etc/kubernetes/admin.conf`.
+> 1. `echo $(hostname -I | awk '{print $1}')` - This variable gets the ip address needed in the kubeadm init command.
+> 2. `kubeadm token create --print-join-command 2> /dev/null` - Prints just the join token without any accompanying errors (possible to use with IaC or bash scripts).
