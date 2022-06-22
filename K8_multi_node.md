@@ -95,7 +95,7 @@ Weave Net is a resilient and simple to use network for Kubernetes. It provides a
 `kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"`
 
 #### Notes on Weave
-By default, Weave uses the CIDR block `10.32.0.0/12`. Make sure this does not overlap with the pod network CIDR block you specified in the `kubeadm init` command. For example, if you used the CIDR block `10.0.0.0/8`, this will overlap with `10.32.0.0/12` because after the first `octet` in Weave's default CIDR block, the rest of the `octets` could change - including the second `octet` changing to 32. 
+By default, Weave uses the CIDR block `10.32.0.0/12`. Make sure this does not overlap with the pod network CIDR block you specified in the `kubeadm init` command. For example, if you used the CIDR block `10.0.0.0/8`, this will overlap with `10.32.0.0/12` because after the first `octet`, the rest of the `octets` could change - including the second `octet` changing to 32. 
 
 Comprehensive documentation for integrating weave into your cluster can be found on [Weave's official website](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/).
 
