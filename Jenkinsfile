@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+    label 'eng110-jenkins-worker'
+    }
 
     parameters {
         string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
