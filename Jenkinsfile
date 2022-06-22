@@ -4,10 +4,8 @@ pipeline {
     }
 
     parameters {
-        string(name: 'environment', defaultValue: 'terraform', description: 'Workspace/environment file to use for deployment')
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Automatically run apply after generating plan?')
         booleanParam(name: 'destroy', defaultValue: false, description: 'Destroy Terraform build?')
-
     }
 
 
@@ -24,6 +22,8 @@ pipeline {
                         dir("terraform")
                         {
                             checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/samuel-walters/Complete-CICD']]])
+                            sh 'echo $(pwd)'
+                            sh 'echo $(ls)'
                         }
                     }
                 }
@@ -32,39 +32,18 @@ pipeline {
         stage('Plan') {
             steps {
                 script{
-                    dir("Complete-CICD")
+                    dir("terraform")
                         {
-                            when {
-                                not {
-                                    equals expected: true, actual: params.destroy
-                                }
-                            }
-                            
-                            steps {
-                                sh 'sudo su -'
-                                sh 'terraform init -input=false'
-                                sh 'terraform workspace select ${environment} || terraform workspace new ${environment}'
-                
-                                sh "terraform plan -input=false -out tfplan "
-                                sh 'terraform show -no-color tfplan > tfplan.txt'
-                            }
+                                sh 'echo $(ls)'
+                                sh 'sudo terraform init -input=false'
+                                sh "sudo terraform plan -input=false -out tfplan "
+                                sh 'sudo terraform show -no-color tfplan > tfplan.txt'
                         }
                 }
-            }
-        }
-        stage('Approval') {
-           when {
-               not {
-                   equals expected: true, actual: params.autoApprove
-               }
-               not {
-                    equals expected: true, actual: params.destroy
                 }
-           }
-           
-                
-            
-
+            }
+        
+        stage('Approval') {
            steps {
                script {
                     def plan = readFile 'tfplan.txt'
@@ -75,11 +54,6 @@ pipeline {
        }
 
         stage('Apply') {
-            when {
-                not {
-                    equals expected: true, actual: params.destroy
-                }
-            }
             
             steps {
                 sh "terraform apply -input=false tfplan"
@@ -87,9 +61,6 @@ pipeline {
         }
         
         stage('Destroy') {
-            when {
-                equals expected: true, actual: params.destroy
-            }
         
         steps {
            sh "terraform destroy --auto-approve"
