@@ -105,7 +105,15 @@ pipeline {
 > 14. Repeat the process for your secret access key, and make sure for `ID` you put `AWS_SECRET_ACCESS_KEY`.
 > 15. Go back to the Dashboard, and click on `New Item`.
 > 16. After entering a new name, click on `Pipeline`.
-
+> 17. Tick the box that says `This Pipeline is parameterised`. 
+> 17. In the pipeline section, select `Pipeline script from SCM`. 
+> 18. Choose `Git`.
+> 19. Enter your repository where your Jenkinsfile is located.
+> 20. Choose your primary branch. Check if `master` should be changed to `main`.
+> 21. The `Script Path` should be `Jenkinsfile`.
+> 22. Double check your details look similar to the image below (but with a different GitHub repository):
+![](https://i.imgur.com/gdtDuKe.png)
+> 23. Select `Build with Parameters`, and choose `terraform`. Click `build`.
 
 # Creating Users and Setting up Permissions
 
