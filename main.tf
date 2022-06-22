@@ -1,13 +1,8 @@
-# --- root/main.tf ---
+resource "aws_vpc" "sam-vpc" {
+  cidr_block       = "10.0.0.0/16"
+  instance_tenancy = "default"
 
-module "networking" {
-  source       = "./networking"
-  vpc_cidr     = "10.0.0.0/16"
-  public_cidrs = ["10.0.1.0/24", "10.0.2.0/24"]
-}
-
-module "compute" {
-  source        = "./compute"
-  web_sg        = module.networking.web_sg
-  public_subnet = module.networking.public_subnet
+  tags = {
+    Name = "sam_vpc"
+  }
 }
