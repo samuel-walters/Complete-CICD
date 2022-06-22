@@ -18,6 +18,7 @@
 > 9. In your **MASTER NODE**, test the ssh connection with `ssh jenkins@ip-iphere` (take the ip from the **SLAVE NODE'**'s terminal).
 > 10. Exit by pressing ctrl + D, or entering in the word `exit`.
 > 11. In your **MASTER NODE**, type in the command `sudo cp ~/.ssh/known_hosts /var/lib/jenkins/.ssh`.
+> 12. To allow the jenkins user in the agent node to run sudo commands, type the commands `sudo su` and then `nano /etc/sudoers`. Add this line (or edit if it already exists): `jenkins ALL= NOPASSWD: ALL`. 
 
 # Configuration Details in the Browser
 
@@ -63,8 +64,7 @@ sudo apt-get update
 sudo apt-get install awscli -y
 aws --version
 ```
-> 2. Check the console output to see if it has been installed correctly on the worker node. If sudo is not working, SSH into your worker node, and run `sudo nano /etc/sudoers`. Add (or modify if it exists) the line `jenkins ALL=(ALL) NOPASSWD: ALL`.
-> 3. Create a pipeline, and your script should look like this: 
+> 2. Create a pipeline, and your script should look like this: 
 ``` Groovy
 pipeline {
     agent { label 'mynode' }
@@ -85,7 +85,26 @@ pipeline {
     }
 }
 ```
-> 4. This script relies upon the `Amazon EC2 plugin`. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
+> 3. This script relies upon the `Amazon EC2 plugin`. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
+
+# Set up Terraform
+
+> 1. Click on `Manage Jenkins` in the browser.
+> 2. Click `Manage Plugins`, and go to the available tab.
+> 3. Search for terraform, and click `Install without restart`.
+> 4. Click `Manage Jenkins`, then click `Global Tool Configuration` from the `System configuration section`.
+> 5. Scroll down to the `Terraform` section and click `Add Terraform`.
+> 6. Enter a Name of your choice. I’m going to use “eng110-terraform”.
+> 7. **Untick** the box that says `Install automatically`. By default, this box gets ticked. 
+> 8. For `Install directory`, enter `/usr/bin` and click `Apply` and then `Save`.
+> 9. Once again, click `Manage Jenkins`. Go to `Manage Credentials`.
+> 10. Click on `Jenkins`. Click on `Global credentials (unrestricted)`, and click `Add Credentials`.
+> 11. Under `Kind`, click the drop-down and select `Secret text`. 
+> 12. For secret, copy and paste your AWS Access Key.
+> 13. For `ID`, type `AWS_ACCESS_KEY_ID` and click `OK`.
+> 14. Repeat the process for your secret access key, and make sure for `ID` you put `AWS_SECRET_ACCESS_KEY`.
+> 15. Go back to the Dashboard, and click on `New Item`.
+> 16. After entering a new name, click on `Pipeline`.
 
 
 # Creating Users and Setting up Permissions
