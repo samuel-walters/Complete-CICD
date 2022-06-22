@@ -30,18 +30,26 @@ pipeline {
             }
 
         stage('Plan') {
-            when {
-                not {
-                    equals expected: true, actual: params.destroy
-                }
-            }
-            
             steps {
-                sh 'terraform init -input=false'
-                sh 'terraform workspace select ${environment} || terraform workspace new ${environment}'
-
-                sh "terraform plan -input=false -out tfplan "
-                sh 'terraform show -no-color tfplan > tfplan.txt'
+                script{
+                    dir("Complete-CICD")
+                        {
+                            when {
+                                not {
+                                    equals expected: true, actual: params.destroy
+                                }
+                            }
+                            
+                            steps {
+                                sh 'sudo su -'
+                                sh 'terraform init -input=false'
+                                sh 'terraform workspace select ${environment} || terraform workspace new ${environment}'
+                
+                                sh "terraform plan -input=false -out tfplan "
+                                sh 'terraform show -no-color tfplan > tfplan.txt'
+                            }
+                        }
+                }
             }
         }
         stage('Approval') {
