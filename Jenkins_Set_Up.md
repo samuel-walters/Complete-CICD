@@ -28,7 +28,7 @@
 
 # Configure a Cloud
 
-> 1. In the Jenkins `Plugin Manager`, search for `Amazon EC2 plugin` and install it without restarting.
+> 1. In the Jenkins `Plugin Manager`, search for `Amazon EC2` and install it without restarting.
 > 2. Go to `Configure Clouds` and select `Amazon EC2`.
 > 3. For `Amazon EC2 Name`, put a name like `my-ec2`.
 > 4. Add your EC2 Credentials. For `Kind`, remember to select `AWS Credentials`.
