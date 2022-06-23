@@ -1,6 +1,3 @@
-variable "vpc_cidr"{
-}
-
 # Create a VPC
 
 resource "aws_vpc" "eng110-project-vpc" {
