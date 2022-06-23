@@ -118,6 +118,20 @@ terraform -v
 ![](https://i.imgur.com/gdtDuKe.png)
 > 23. The Jenkins pipeline will require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
 
+## Setting up Environment Variables in Jenkins for Terraform
+
+> 1. Go to `Manage Jenkins`, and then `Configure System`.
+> 2. Scroll down to `Global Properties`, and tick `Environment Variables`.
+> 3. The name of the variable **must** begin with `TF_VAR_`. For example, a variable could be called `TF_VAR_vpc_cidr`. 
+> 4. Enter the value for your variable.
+> 5. Click `Apply` and then `Save`.
+> 6. In your `main.tf` file, ensure you have a variable block. For the above example, this block would look like this:
+```terraform
+variable "vpc_cidr"{
+}
+```
+> 7. In `main.tf`, you will now be able to refer to the variable by using the syntax `var.name_of_variable`. For example, in this case, `var.vpc_cidr` would be used.
+
 # Creating Users and Setting up Permissions
 
 > 1. In your browser, click `Manage Jenkins` and then `Manage users`. Click `Create User` on the left-hand side.
