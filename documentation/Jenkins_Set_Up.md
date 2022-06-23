@@ -85,7 +85,7 @@ pipeline {
     }
 }
 ```
-> 3. This script relies upon the `Amazon EC2 plugin`. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
+> 3. This script relies upon the `Amazon EC2 plugin`. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
 
 # Setting Up Terraform
 
@@ -117,9 +117,7 @@ terraform -v
 > 5. Enter the repository where your Jenkinsfile and main.tf files are located.
 > 6. Choose your primary branch. Check if `master` should be changed to `main`.
 > 7. The `Script Path` should be `Jenkinsfile`.
-> 8. Double check that your details look similar to the image below (but with a different GitHub repository):
-![](https://i.imgur.com/gdtDuKe.png)
-> 9. The Jenkins pipeline will require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
+> 8. The Jenkins pipeline will require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
 
 ## Setting up Environment Variables in Jenkins for Terraform
 
