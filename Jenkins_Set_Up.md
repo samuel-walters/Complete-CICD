@@ -89,31 +89,34 @@ pipeline {
 
 # Set up Terraform
 
-> 1. Click on `Manage Jenkins` in the browser.
-> 2. Click `Manage Plugins`, and go to the available tab.
-> 3. Search for terraform, and click `Install without restart`.
-> 4. Click `Manage Jenkins`, then click `Global Tool Configuration` from the `System configuration section`.
-> 5. Scroll down to the `Terraform` section and click `Add Terraform`.
-> 6. Enter a Name of your choice. I’m going to use “eng110-terraform”.
-> 7. **Untick** the box that says `Install automatically`. By default, this box gets ticked. 
-> 8. For `Install directory`, enter `/usr/bin` and click `Apply` and then `Save`.
-> 9. Once again, click `Manage Jenkins`. Go to `Manage Credentials`.
-> 10. Click on `Jenkins`. Click on `Global credentials (unrestricted)`, and click `Add Credentials`.
-> 11. Under `Kind`, click the drop-down and select `Secret text`. 
-> 12. For secret, copy and paste your AWS Access Key.
-> 13. For `ID`, type `AWS_ACCESS_KEY_ID` and click `OK`.
-> 14. Repeat the process for your secret access key, and make sure for `ID` you put `AWS_SECRET_ACCESS_KEY`.
-> 15. Go back to the Dashboard, and click on `New Item`.
-> 16. After entering a new name, click on `Pipeline`.
-> 17. Tick the box that says `This Pipeline is parameterised`. 
-> 17. In the pipeline section, select `Pipeline script from SCM`. 
-> 18. Choose `Git`.
-> 19. Enter your repository where your Jenkinsfile is located.
+> 1. Create a new job called `install terraform`, and tick `Restrict where this project can be run`. Select the name of your worker node, and under `Build` select `Execute shell`. Copy and paste this script to install terraform:
+```bash
+wget https://releases.hashicorp.com/terraform/1.0.3/terraform_1.0.3_linux_amd64.zip
+sudo apt-get install unzip
+unzip terraform_1.0.3_linux_amd64.zip             
+sudo mv terraform /usr/bin
+terraform -v
+```
+> 2. Click on `Manage Jenkins` in the browser.
+> 3. Click `Manage Plugins`, and go to the available tab.
+> 4. Search for terraform, and click `Install without restart`.
+> 5. Click `Manage Jenkins`, then click `Global Tool Configuration` from the `System configuration section`.
+> 6. Scroll down to the `Terraform` section and click `Add Terraform`.
+> 7. Enter a Name of your choice. I’m going to use “eng110-terraform”.
+> 8. **Untick** the box that says `Install automatically`. By default, this box gets ticked. 
+> 9. For `Install directory`, enter `/usr/bin` and click `Apply` and then `Save`.
+> 10. Go back to the Dashboard, and click on `New Item`.
+> 11. After entering a new name, click on `Pipeline`.
+> 12. Tick the box that says `This Pipeline is parameterised`. 
+> 13. Choose your parameters. In this case, a `Boolean Parameter` named `Destroy` will be used, with the `Set by Default` box ticked and the description set to `Carry out terraform destroy?`.
+> 14. In the pipeline section, select `Pipeline script from SCM`. 
+> 15. Choose `Git`.
+> 16. Enter the repository where your Jenkinsfile and main.tf files are located.
 > 20. Choose your primary branch. Check if `master` should be changed to `main`.
 > 21. The `Script Path` should be `Jenkinsfile`.
-> 22. Double check your details look similar to the image below (but with a different GitHub repository):
+> 22. Double check that your details look similar to the image below (but with a different GitHub repository):
 ![](https://i.imgur.com/gdtDuKe.png)
-> 23. Select `Build with Parameters`, and choose `terraform`. Click `build`.
+> 23. The Jenkins pipeline will require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
 
 # Creating Users and Setting up Permissions
 
