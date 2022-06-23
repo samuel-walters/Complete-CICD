@@ -1,8 +1,10 @@
-resource "aws_vpc" "sam-vpc" {
-  cidr_block       = "10.0.0.0/16"
+# Create a VPC
+
+resource "aws_vpc" "eng110-project-vpc" {
+  cidr_block       = var.VPC_CIDR
   instance_tenancy = "default"
 
   tags = {
-    Name = "sam_vpc"
+    Name = "eng110-project-vpc"
   }
 }
