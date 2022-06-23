@@ -64,7 +64,7 @@ sudo apt-get update
 sudo apt-get install awscli -y
 aws --version
 ```
-> 2. Create a pipeline, and your script should look like this: 
+> 2. Create a declarative pipeline, and your script should look like this: 
 ``` Groovy
 pipeline {
     agent { label 'mynode' }
@@ -87,7 +87,9 @@ pipeline {
 ```
 > 3. This script relies upon the `Amazon EC2 plugin`. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
 
-# Set up Terraform
+# Setting Up Terraform
+
+## Installing Terraform
 
 > 1. Create a new job called `install terraform`, and tick `Restrict where this project can be run`. Select the name of your worker node, and under `Build` select `Execute shell`. Copy and paste this script to install terraform:
 ```bash
@@ -105,18 +107,19 @@ terraform -v
 > 7. Enter a Name of your choice. I’m going to use “eng110-terraform”.
 > 8. **Untick** the box that says `Install automatically`. By default, this box gets ticked. 
 > 9. For `Install directory`, enter `/usr/bin` and click `Apply` and then `Save`.
-> 10. Go back to the Dashboard, and click on `New Item`.
-> 11. After entering a new name, click on `Pipeline`.
-> 12. Tick the box that says `This Pipeline is parameterised`. 
-> 13. Choose your parameters. In this case, a `Boolean Parameter` named `Destroy` will be used, with the `Set by Default` box ticked and the description set to `Carry out terraform destroy?`.
-> 14. In the pipeline section, select `Pipeline script from SCM`. 
-> 15. Choose `Git`.
-> 16. Enter the repository where your Jenkinsfile and main.tf files are located.
-> 20. Choose your primary branch. Check if `master` should be changed to `main`.
-> 21. The `Script Path` should be `Jenkinsfile`.
-> 22. Double check that your details look similar to the image below (but with a different GitHub repository):
+
+## Creating a pipeline
+
+> 1. Go to the Dashboard, and click on `New Item`.
+> 2. After entering a new name, click on `Pipeline`.
+> 3. In the pipeline section, select `Pipeline script from SCM`. 
+> 4. Choose `Git`.
+> 5. Enter the repository where your Jenkinsfile and main.tf files are located.
+> 6. Choose your primary branch. Check if `master` should be changed to `main`.
+> 7. The `Script Path` should be `Jenkinsfile`.
+> 8. Double check that your details look similar to the image below (but with a different GitHub repository):
 ![](https://i.imgur.com/gdtDuKe.png)
-> 23. The Jenkins pipeline will require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
+> 9. The Jenkins pipeline will require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
 
 ## Setting up Environment Variables in Jenkins for Terraform
 
@@ -125,12 +128,12 @@ terraform -v
 > 3. The name of the variable **must** begin with `TF_VAR_`. For example, a variable could be called `TF_VAR_vpc_cidr`. 
 > 4. Enter the value for your variable.
 > 5. Click `Apply` and then `Save`.
-> 6. In your `main.tf` file, ensure you have a variable block. For the above example, this block would look like this:
+> 6. In your `main.tf` file, ensure you have a variable block. For the above example, the block would look like this:
 ```terraform
 variable "vpc_cidr"{
 }
 ```
-> 7. In `main.tf`, you will now be able to refer to the variable by using the syntax `var.name_of_variable`. For example, in this case, `var.vpc_cidr` would be used.
+> 7. In `main.tf`, you will now be able to refer to the variable by using the syntax `var.name_of_variable`. For example, in this case, you would type `var.vpc_cidr`.
 
 # Creating Users and Setting up Permissions
 
