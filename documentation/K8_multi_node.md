@@ -101,7 +101,7 @@ Comprehensive documentation for integrating weave into your cluster can be found
 
 ### Cluster Join Command 
 
-`kubeadm token create --print-join-command`
+Note down the output generated from this command for later use: `kubeadm token create --print-join-command`
 
 ### Install helm
 
@@ -115,11 +115,11 @@ Comprehensive documentation for integrating weave into your cluster can be found
 
 Double check that you are the root user on your master and agent nodes. If you are not, run the `sudo su -` command again.
 
-### Run the kubeadm join command
+### Run the kubeadm join command on your agent nodes
 
-This command can be found at the bottom of the output on the master node when you run `kubeadm token create --print-join-command`.
+This command can be found at the bottom of the output on the master node when you run the command `kubeadm token create --print-join-command`.
 
-Run `kubectl get pods`, and you should see an error. We will deal with this blocker.
+Run `kubectl get pods` in your agent nodes, and you should see an error. We will deal with this blocker.
 
 ### Dealing with the 8080 blocker
 
@@ -131,7 +131,7 @@ Navigate to `cd ~/.kube` in your agent node.
 
 In your agent node, type in `sudo nano config`, and paste all of the contents from admin.conf (which you should have copied from the master node admin.conf file).
 
-Run `kubectl get nodes`.
+Run `kubectl get nodes`, and you will see all of the nodes in the cluster.
 
 # On Your Master Node - Setting Up a Kubernetes Cluster with Helm
 
@@ -140,7 +140,7 @@ Run `kubectl get nodes`.
 > 3. To find your new local helm repository, use the command `helm search repo`.
 > 4. To install the cluster, use this repository name in the following command: `helm install custom_name repositoryname`. For example, I would use the following command: `helm install custom-name-here custom-name-here/eng110-nodeapp`.
 
-### Useful commands for potential future use
+# Useful commands for potential future use with IaC
 
 > 1. `echo $(hostname -I | awk '{print $1}')` - This variable gets the ip address needed in the kubeadm init command.
-> 2. `kubeadm token create --print-join-command 2> /dev/null` - Prints just the join token without any accompanying errors (possible to use with IaC or bash scripts).
+> 2. `kubeadm token create --print-join-command 2> /dev/null` - Prints just the join token without any accompanying errors.
