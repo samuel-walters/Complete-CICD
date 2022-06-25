@@ -124,7 +124,8 @@ terraform -v
 > 1. Go to `Manage Jenkins`, and then `Configure System`.
 > 2. Scroll down to `Global Properties`, and tick `Environment Variables`.
 > 3. The name of the variable **must** begin with `TF_VAR_`. For example, a variable could be called `TF_VAR_vpc_cidr`. 
-> 4. Enter the value for your variable.
+> 4. Enter the value for your variable. Your screen should look something like this:
+![](https://i.imgur.com/lRdMUPy.png)
 > 5. Click `Apply` and then `Save`.
 > 6. In your `main.tf` file, ensure you have a variable block. For the above example, the block would look like this:
 ```terraform

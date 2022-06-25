@@ -16,7 +16,10 @@ variable "security_port8"{}
 variable "security_port9"{}
 variable "security_port10"{}
 variable "security_port11"{}
-variable "controlplane_ami_id"{}
+variable "security_port12"{}
+variable "security_port13"{}
+variable "security_port14"{}
+variable "kubernetes_ami_id"{}
 variable "aws_key_name"{}
 
 # Create a VPC
@@ -128,13 +131,6 @@ resource "aws_security_group" "eng110-project-sg"  {
 
 ingress {
     from_port       = var.security_port3
-    to_port         = var.security_port3
-    protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
-  }
-
-ingress {
-    from_port       = var.security_port4
     to_port         = var.security_port4
     protocol        = "tcp"
     cidr_blocks     = var.security_cidr
@@ -163,13 +159,6 @@ ingress {
 
 ingress {
     from_port       = var.security_port8
-    to_port         = var.security_port8
-    protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
-  }
-
-ingress {
-    from_port       = var.security_port9
     to_port         = var.security_port9
     protocol        = "tcp"
     cidr_blocks     = var.security_cidr
@@ -185,7 +174,21 @@ ingress {
 ingress {
     from_port       = var.security_port11
     to_port         = var.security_port11
+    protocol        = "tcp"
+    cidr_blocks     = var.security_cidr
+  }
+
+ingress {
+    from_port       = var.security_port12
+    to_port         = var.security_port13
     protocol        = "udp"
+    cidr_blocks     = var.security_cidr
+  }
+
+ingress {
+    from_port       = var.security_port14
+    to_port         = var.security_port14
+    protocol        = "tcp"
     cidr_blocks     = var.security_cidr
   }
 
@@ -204,7 +207,7 @@ ingress {
 # Launch the Kubernetes Controlplane
 
 resource "aws_instance" "eng110-project-kubernetes-controlplane" {
-  ami = var.controlplane_ami_id
+  ami = var.kubernetes_ami_id
   # We need two CPUs, so t2.medium will be chosen
   instance_type = "t2.medium"
   key_name = var.aws_key_name
