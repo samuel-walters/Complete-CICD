@@ -5,6 +5,7 @@ pipeline {
     }
 
     parameters {
+      booleanParam defaultValue: true, description: 'Carry out terraform apply?', name: 'Apply'
       booleanParam defaultValue: true, description: 'Carry out terraform destroy?', name: 'Destroy'
     }
 
@@ -38,10 +39,14 @@ pipeline {
         stage('Apply') {
             steps {
                 script {
-                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        dir("terraform") {
-                            sh "terraform apply -input=false tfplan"
+                    if (params.Apply == true){
+                        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                            dir("terraform") {
+                                sh "terraform apply -input=false tfplan"
+                            }
                         }
+                    } else {
+                        echo "Skipping terraform apply"
                     }
                 }
             }
@@ -53,7 +58,7 @@ pipeline {
                     if(params.Destroy == true){  
                         withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                             dir("terraform") {
-                            sh "terraform destroy --auto-approve"
+                                sh "terraform destroy --auto-approve"
                             }
                         }
                     } else {
