@@ -116,7 +116,8 @@ terraform -v
 > 4. Choose `Git`.
 > 5. Enter the repository where your Jenkinsfile and main.tf files are located.
 > 6. Choose your primary branch. Check if `master` should be changed to `main`.
-> 7. The `Script Path` should be `Jenkinsfile`.
+> 7. The `Script Path` should be `Jenkinsfile`. Your screen should look something like this (but with a different GitHub repository):
+![](https://i.imgur.com/CvNia31.png)
 > 8. The Jenkins pipeline will require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
 
 ## Setting up Environment Variables in Jenkins for Terraform
