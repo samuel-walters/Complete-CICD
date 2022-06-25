@@ -135,6 +135,74 @@ variable "vpc_cidr"{
 ```
 > 7. In `main.tf`, you will now be able to refer to the variable by using the syntax `var.name_of_variable`. For example, in this case, you would type `var.vpc_cidr`.
 
+# Setting Up Ansible
+
+## Installing Ansible
+
+> 1. In your agent node, become the `jenkins` user with the command `sudo su jenkins`.
+
+> 2. Run these commands. These versions have been selected because they are compatible with one another:
+
+```bash
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt install python
+sudo apt install python-pip -y
+sudo apt install python3-pip
+alias python=python3
+sudo python3 -m pip install botocore==1.26.0
+sudo python3 -m pip install awscli==1.24.0 botocore==1.26.0
+pip3 install boto boto3==1.23.0 botocore==1.26.0
+sudo apt-add-repository --yes --update ppa:ansible/ansible
+sudo apt-get install ansible -y
+```
+> 3. Run the following commands:
+
+```bash
+cd /etc/ansible
+sudo mkdir group_vars
+cd group_vars
+sudo mkdir all
+cd all
+```
+> 4. Run the command `sudo ansible-vault create pass.yml`, and enter a password (twice) of your choosing.
+> 5. You will enter Vim (a text editor), which can be tricky to use.
+> 6. To insert information, hold shift and press i. 
+> 7. Enter your AWS credentials using this format:
+
+```bash
+ec2_access_key: keyhere
+ec2_secret_key: keyhere
+```
+> 8. To save and exit vim, press esc, and then type :wq! and press enter.
+> 9. Run the command `sudo chmod 666 pass.yml`.
+> 10. To test ansible vault, try typing `sudo cat pass.yml`. Make sure you cannot see your keys in the output.
+> 11. Go to your `.ssh` directory with `cd ~/.ssh`.
+> 12. Make sure the directory has the private key needed to SSH into the instances you wish to provision. 
+> 13. The `.ssh` directory will also require the public key. To get the public key, you can run this command `ssh-keygen -y -f ~/.ssh/file_name.pem > ~/.ssh/file_name.pub`.
+> 14. run the command `sudo chmod 400 eng119.pem`.
+> 15. Return to `/etc/ansible`. Type `sudo nano hosts`.
+> 16. Enter lines similar to these, specifying all the instances you want ansible to connect with and provision (remember to change relevant details such as the path to the key)
+```bash
+[local]
+localhost ansible_python_interpreter=/usr/local/bin/python3
+
+[controlplane]
+ec2-instance ansible_host=ec2-54-217-17-190.eu-west-1.compute.amazonaws.com ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+```
+> 17. To test it is working, create a yaml file (which will be used as an Ansible playbook) with the command `sudo touch test.yml`.
+> 18. For now, enter simple instructions such as the ones below:
+```bash
+---
+        # where do we want to install
+- hosts: aws
+
+        # get the facts
+  gather_facts: yes
+```
+> 19. Check if the playbook works with `sudo ansible-playbook tests.yml --ask-vault-pass`.
+> 20. Google error messages if they do appear. Usually these messages reveal what went wrong quite clearly, such as an incorrect path to your private key or the key not having the right permissions (which should be granted with `sudo chmod 400 key.pem`).
+
 # Creating Users and Setting up Permissions
 
 > 1. In your browser, click `Manage Jenkins` and then `Manage users`. Click `Create User` on the left-hand side.
