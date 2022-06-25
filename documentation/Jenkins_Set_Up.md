@@ -166,7 +166,7 @@ sudo mkdir all
 cd all
 ```
 > 4. Run the command `sudo ansible-vault create pass.yml`, and enter a password (twice) of your choosing.
-> 5. You will enter Vim (a text editor), which can be tricky to use.
+> 5. You will enter Vim (a text editor) which can be tricky to use.
 > 6. To insert information, hold shift and press i. 
 > 7. Enter your AWS credentials using this format:
 
@@ -179,8 +179,8 @@ ec2_secret_key: keyhere
 > 10. To test ansible vault, try typing `sudo cat pass.yml`. Make sure you cannot see your keys in the output.
 > 11. Go to your `.ssh` directory with `cd ~/.ssh`.
 > 12. Make sure the directory has the private key needed to SSH into the instances you wish to provision. 
-> 13. The `.ssh` directory will also require the public key. To get the public key, you can run this command `ssh-keygen -y -f ~/.ssh/file_name.pem > ~/.ssh/file_name.pub`.
-> 14. run the command `sudo chmod 400 eng119.pem`.
+> 13. The `.ssh` directory will also require the public key. To get the public key, you can run this command: `ssh-keygen -y -f ~/.ssh/file_name.pem > ~/.ssh/file_name.pub`.
+> 14. Run the command `sudo chmod 400 eng119.pem`.
 > 15. Return to `/etc/ansible`. Type `sudo nano hosts`.
 > 16. Enter lines similar to these, specifying all the instances you want ansible to connect with and provision (remember to change relevant details such as the path to the key)
 ```bash
@@ -192,15 +192,13 @@ ec2-instance ansible_host=ec2-54-217-17-190.eu-west-1.compute.amazonaws.com ansi
 ```
 > 17. To test it is working, create a yaml file (which will be used as an Ansible playbook) with the command `sudo touch test.yml`.
 > 18. For now, enter simple instructions such as the ones below:
-```bash
+```yaml
 ---
-        # where do we want to install
-- hosts: aws
+- hosts: controlplane
 
-        # get the facts
   gather_facts: yes
 ```
-> 19. Check if the playbook works with `sudo ansible-playbook tests.yml --ask-vault-pass`.
+> 19. Check if the playbook works with `sudo ansible-playbook test.yml --ask-vault-pass`.
 > 20. Google error messages if they do appear. Usually these messages reveal what went wrong quite clearly, such as an incorrect path to your private key or the key not having the right permissions (which should be granted with `sudo chmod 400 key.pem`).
 
 # Creating Users and Setting up Permissions
