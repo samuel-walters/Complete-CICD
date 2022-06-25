@@ -119,84 +119,84 @@ resource "aws_security_group" "eng110-project-sg"  {
     from_port       = var.security_port1
     to_port         = var.security_port1
     protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
   ingress {
     from_port       = var.security_port2
     to_port         = var.security_port2
     protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
 ingress {
     from_port       = var.security_port3
     to_port         = var.security_port4
     protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
 ingress {
     from_port       = var.security_port5
     to_port         = var.security_port5
     protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
 ingress {
     from_port       = var.security_port6
     to_port         = var.security_port6
     protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
 ingress {
     from_port       = var.security_port7
     to_port         = var.security_port7
     protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
 ingress {
     from_port       = var.security_port8
     to_port         = var.security_port9
     protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
 ingress {
     from_port       = var.security_port10
     to_port         = var.security_port10
     protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
 ingress {
     from_port       = var.security_port11
     to_port         = var.security_port11
     protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
 ingress {
     from_port       = var.security_port12
     to_port         = var.security_port13
     protocol        = "udp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
 ingress {
     from_port       = var.security_port14
     to_port         = var.security_port14
     protocol        = "tcp"
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
   egress {
     from_port       = 0
     to_port         = 0
     protocol        = "-1" 
-    cidr_blocks     = var.security_cidr
+    cidr_blocks     = [var.security_cidr]
   }
 
   tags = {
