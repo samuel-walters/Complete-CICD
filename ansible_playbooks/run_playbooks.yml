@@ -1,0 +1,11 @@
+- name: Running controlplane playbook
+  import_playbook: controlplane.yml
+
+- name: Running fetch_files playbook
+  import_playbook: fetch_files.yml
+
+- name: Running workers playbook
+  import_playbook: workers.yml
+
+- name: Running helm playbook
+  import_playbook: helm.yml
