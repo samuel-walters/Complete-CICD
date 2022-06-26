@@ -1,0 +1,23 @@
+ - hosts: controlplane
+   become: yes
+   become_method: sudo
+   become_user: root
+   tasks:
+
+   - name: Deleting join_command.txt if it exists
+     file:
+       path: "/root/join_command.txt"
+       state: absent
+
+   - name: Creating an empty file called join_command.txt
+     file:
+       path: "/root/join_command.txt"
+       state: touch
+
+   - name: Inserting relevant information into join_command.txt
+     shell: |
+       echo "$(kubeadm token create --print-join-command 2> /dev/null)" >> /root/join_command.txt
+
+   - name: Transferring join_command.txt to ansible host
+     run_once: yes
+     fetch: src=/root/join_command.txt dest=/etc/ansible/ flat=yes
