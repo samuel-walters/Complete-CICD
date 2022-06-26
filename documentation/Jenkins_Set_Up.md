@@ -204,6 +204,7 @@ worker1 ansible_host=ec2-34-245-138-168.eu-west-1.compute.amazonaws.com ansible_
 ```
 > 19. Check if the playbook works with `sudo ansible-playbook test.yml --ask-vault-pass`.
 > 20. Google error messages if they do appear. Usually these messages reveal what went wrong quite clearly, such as an incorrect path to your private key or the key not having the right permissions (which should be granted with `sudo chmod 400 key.pem`).
+> 21. An interesting command to keep in mind is `export ANSIBLE_HOST_KEY_CHECKING=False`. Setting this environment variable to False avoids the prompt which appears whenever you initially connect to a host. 
 
 # Creating Users and Setting up Permissions
 
