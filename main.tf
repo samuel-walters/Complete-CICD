@@ -207,7 +207,7 @@ ingress {
 # Launch the Kubernetes Controlplane
 
 resource "aws_instance" "eng110-project-kubernetes-controlplane" {
-  ami = var.kubernetes_ami_id
+  ami = var.controlplane_ami_id
   # We need two CPUs, so t2.medium will be chosen
   instance_type = "t2.medium"
   key_name = var.aws_key_name
@@ -215,4 +215,30 @@ resource "aws_instance" "eng110-project-kubernetes-controlplane" {
   vpc_security_group_ids = ["${aws_security_group.eng110-project-sg.id}"]
   associate_public_ip_address = true
   tags = {Name = "eng110-project-kubernetes-controlplane"}
+}
+
+# Launch one worker node
+
+resource "aws_instance" "eng110-project-kubernetes-worker1" {
+  ami = var.worker_ami_id
+  # Workers only need one CPU
+  instance_type = "t2.micro"
+  key_name = var.aws_key_name
+  subnet_id = "${aws_subnet.eng110-project-subnet.id}"
+  vpc_security_group_ids = ["${aws_security_group.eng110-project-sg.id}"]
+  associate_public_ip_address = true
+  tags = {Name = "eng110-project-kubernetes-worker1"}
+}
+
+# Launch a second worker node
+
+resource "aws_instance" "eng110-project-kubernetes-worker2" {
+  ami = var.worker_ami_id
+  # Workers only need one CPU
+  instance_type = "t2.micro"
+  key_name = var.aws_key_name
+  subnet_id = "${aws_subnet.eng110-project-subnet.id}"
+  vpc_security_group_ids = ["${aws_security_group.eng110-project-sg.id}"]
+  associate_public_ip_address = true
+  tags = {Name = "eng110-project-kubernetes-worker2"}
 }
