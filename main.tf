@@ -19,7 +19,8 @@ variable "security_port11"{}
 variable "security_port12"{}
 variable "security_port13"{}
 variable "security_port14"{}
-variable "kubernetes_ami_id"{}
+variable "controlplane_ami_id"{}
+variable "worker_ami_id"{}
 variable "aws_key_name"{}
 
 # Create a VPC
