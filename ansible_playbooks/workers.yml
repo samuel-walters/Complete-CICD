@@ -1,0 +1,21 @@
+---
+ - hosts: workers
+   become: yes
+   become_method: sudo
+   become_user: root
+   tasks:
+
+   - name: create join_command.txt
+     copy: src=/etc/ansible/join_command.txt dest=/root/join_command.txt
+
+   - name: run join command
+     shell: |
+       bash /root/join_command.txt
+
+   - name: Create the .kube directory
+     file:
+       path: /root/.kube
+       state: directory
+
+   - name: create config file in .kube
+     copy: src=/etc/ansible/admin.conf dest=/root/.kube/config

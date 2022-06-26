@@ -1,0 +1,21 @@
+---
+ - hosts: controlplane
+   become: yes
+   become_method: sudo
+   become_user: root
+   vars:
+     helm_chart_url: "https://samuel-walters.github.io/eng110-helm/"
+   tasks:
+
+    - name: Add helm repo
+      kubernetes.core.helm_repository:
+        name: custom-local-repository
+        repo_url: "{{ helm_chart_url }}"
+
+    - name: Install Chart
+      kubernetes.core.helm:
+        name: from-custom-local-repository
+        namespace: default
+        chart_ref: custom-local-repository/eng110-nodeapp
+      environment:
+       KUBECONFIG: /etc/kubernetes/admin.conf
