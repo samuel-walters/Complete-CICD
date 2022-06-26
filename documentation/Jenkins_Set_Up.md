@@ -188,7 +188,11 @@ ec2_secret_key: keyhere
 localhost ansible_python_interpreter=/usr/local/bin/python3
 
 [controlplane]
-ec2-instance ansible_host=ec2-54-217-17-190.eu-west-1.compute.amazonaws.com ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+control ansible_host=ec2-176-34-157-191.eu-west-1.compute.amazonaws.com ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+
+[workers]
+worker ansible_host=ec2-54-195-172-104.eu-west-1.compute.amazonaws.com ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+worker1 ansible_host=ec2-34-245-138-168.eu-west-1.compute.amazonaws.com ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
 ```
 > 17. To test it is working, create a yaml file (which will be used as an Ansible playbook) with the command `sudo touch test.yml`.
 > 18. For now, enter simple instructions such as the ones below:
