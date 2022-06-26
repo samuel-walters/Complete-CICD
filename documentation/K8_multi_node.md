@@ -86,7 +86,7 @@ Run the below command, but replace the ip address and the CIDR block. The ip add
 
 `kubeadm init --apiserver-advertise-address=172.16.16.100 --pod-network-cidr=192.168.0.0/16  --ignore-preflight-errors=all`.
 
-After it has initialised, create the admin.conf file by running this command: `export KUBECONFIG=/etc/kubernetes/admin.conf`
+After it has initialised, create the environment variable `KUBECONFIG` with this command: `export KUBECONFIG=/etc/kubernetes/admin.conf`.
 
 ### Deploy Weave Network
 
