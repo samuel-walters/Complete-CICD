@@ -1,0 +1,28 @@
+pipeline{
+    
+    agent {
+    label 'eng110-jenkins-worker'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                 script{
+                        dir("ansible"){
+                            checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/samuel-walters/Complete-CICD']]])
+                        }
+                    }
+                }
+            }
+      
+        stage("Run an ansible playbook"){
+            steps{
+                dir("ansible/ansible_playbooks"){
+                    withCredentials([file(credentialsId: 'AnsiblePasswordForVaultFile', variable: 'PasswordFile')]) {
+                        sh 'sudo ansible-playbook run_playbooks.yml --vault-password-file ${PasswordFile}'
+                    }
+                }
+            }
+        }
+   }
+}
