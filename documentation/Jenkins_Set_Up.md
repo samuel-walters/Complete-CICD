@@ -205,6 +205,51 @@ worker1 ansible_host=ec2-34-245-138-168.eu-west-1.compute.amazonaws.com ansible_
 > 19. Check if the playbook works with `sudo ansible-playbook test.yml --ask-vault-pass`.
 > 20. Google error messages if they do appear. Usually these messages reveal what went wrong quite clearly, such as an incorrect path to your private key or the key not having the right permissions (which should be granted with `sudo chmod 400 key.pem`).
 
+## Automating Set Up of Ansible Hosts File
+
+> 1. Your agent will need AWS CLI installed. View step one of the "[Set up AWS CLI](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Set-up-AWS-CLI)" section to see how to install AWS CLI.
+> 2. This automated process will also require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to add these credentials to Jenkins.
+> 3. Click on the `Dashboard` in the Jenkins browser, and select `Freestyle project` with a name of your choice (for example `set-up-ansible-hosts`).
+> 4. Tick `Discard old builds`, and for `Max # of builds to keep` enter 3.
+> 5. Tick `Restrict where this project can be run`, and enter your agent node's name (which in this case is `eng110-jenkins-worker`). Wait for it to say this under the box: `Label eng110-jenkins-worker matches 1 node`. You may need to hit backspace if it does not show up initially.
+> 6. Under `Build Environment`, tick `Use secret text(s) or file(s)`, and select your AWS Credentials.
+> 7. Also select `SSH Agent`, and choose your private key needed to access your agent instance.
+> 8. For `build`, choose `Execute shell`.
+> 9. The syntax for the `Execute shell` box will look like this:
+```bash
+PublicDNSName1=$(aws ec2 describe-instances \
+--filters Name=tag:Name,Values="eng110-project-kubernetes-controlplane" \
+--query Reservations[*].Instances[*].PublicDnsName \
+--region eu-west-1 \
+--output text)
+
+PublicDNSName2=$(aws ec2 describe-instances \
+--filters Name=tag:Name,Values="eng110-project-kubernetes-worker1" \
+--query Reservations[*].Instances[*].PublicDnsName \
+--region eu-west-1 \
+--output text)
+
+PublicDNSName3=$(aws ec2 describe-instances \
+--filters Name=tag:Name,Values="eng110-project-kubernetes-worker2" \
+--query Reservations[*].Instances[*].PublicDnsName \
+--region eu-west-1 \
+--output text)
+
+sudo rm /etc/ansible/hosts
+sudo tee -a /etc/ansible/hosts > /dev/null <<EOT
+[local]
+localhost ansible_python_interpreter=/usr/local/bin/python3
+
+[controlplane]
+control ansible_host=${PublicDNSName1} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+
+[workers]
+worker ansible_host=${PublicDNSName2} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+worker1 ansible_host=${PublicDNSName3} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+EOT
+```
+> 10. Remember to replace the names of these instances. In this case, names such as `eng110-project-kubernetes-worker1` are determined by a terraform script (found at the bottom of [main.tf](https://github.com/samuel-walters/Complete-CICD/blob/main/terraform_files/main.tf) in this repository).
+
 ## Running Ansible from Jenkins Pipeline
 
 > 1. In your agent node, navigate to /etc/ansible, and type `sudo nano ansible.cfg`.
@@ -225,7 +270,6 @@ host_key_checking = False
 > 12. For `Script Path`, provide the path to your Jenkinsfile.
 > 13. Your pipeline should look like something resembling the image below. Remember to  replace details such as the repository link and the relative path to the Jenkinsfile:
 ![](https://i.imgur.com/sAoLAru.png)
-
 
 # Creating Users and Setting up Permissions
 
