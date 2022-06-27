@@ -116,8 +116,8 @@ terraform -v
 > 4. Choose `Git`.
 > 5. Enter the repository where your Jenkinsfile and main.tf files are located.
 > 6. Choose your primary branch. Check if `master` should be changed to `main`.
-> 7. The `Script Path` should be `Jenkinsfile`. Your screen should look something like this (but with a different GitHub repository):
-![](https://i.imgur.com/CvNia31.png)
+> 7. For `Script Path`, enter the relative path for your `Jenkinsfile` that contains the code to run your terraform commands. Your screen should look something like this (but with a different GitHub repository):
+![](https://i.imgur.com/lSrzxNs.png)
 > 8. The Jenkins pipeline will require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
 
 ## Setting up Environment Variables in Jenkins for Terraform
@@ -183,7 +183,7 @@ ec2_secret_key: keyhere
 > 14. Run the command `sudo chmod 400 eng119.pem`.
 > 15. Return to `/etc/ansible`. Type `sudo nano hosts`.
 > 16. Enter lines similar to these, specifying all the instances you want ansible to connect with and provision (remember to change relevant details such as the path to the key)
-```bash
+```
 [local]
 localhost ansible_python_interpreter=/usr/local/bin/python3
 
@@ -204,7 +204,28 @@ worker1 ansible_host=ec2-34-245-138-168.eu-west-1.compute.amazonaws.com ansible_
 ```
 > 19. Check if the playbook works with `sudo ansible-playbook test.yml --ask-vault-pass`.
 > 20. Google error messages if they do appear. Usually these messages reveal what went wrong quite clearly, such as an incorrect path to your private key or the key not having the right permissions (which should be granted with `sudo chmod 400 key.pem`).
-> 21. An interesting command to keep in mind is `export ANSIBLE_HOST_KEY_CHECKING=False`. Setting this environment variable to False avoids the prompt which appears whenever you initially connect to a host. 
+
+## Running Ansible from Jenkins Pipeline
+
+> 1. In your agent node, navigate to /etc/ansible, and type `sudo nano ansible.cfg`.
+> 2. Add these lines to the file - it will ensure that no prompt will appear when you try to connect to instances for the first time:
+```
+[defaults]
+host_key_checking = False
+```
+> 3. Click on `Manage Jenkins` in the browser, and go to `Manage Credentials`. 
+> 4. Click on `Jenkins` (global), and then click `Global credentials (unrestricted)`.
+> 5. Click `Add Credentials` on the left, and for `Kind` choose `Secret File`.
+> 6. You will need to upload a simple .txt file which contains the password used to access Ansible Vault.
+> 7. Go to the `Dashboard`, and click `New Item`. Enter a name like `Run Ansible`, and choose `Pipeline` and hit `OK`.
+> 8. In the `Pipeline` section, choose the `SCM` option.
+> 9. For `SCM`, choose `Git`.
+> 10. Enter your GitHub Repository's URL (the same URL you used to clone the repository).
+> 11. Check whether branch should be `main` instead of `master`.
+> 12. For `Script Path`, provide the path to your Jenkinsfile.
+> 13. Your pipeline should look like something resembling the image below. Remember to  replace details such as the repository link and the relative path to the Jenkinsfile:
+![](https://i.imgur.com/sAoLAru.png)
+
 
 # Creating Users and Setting up Permissions
 
