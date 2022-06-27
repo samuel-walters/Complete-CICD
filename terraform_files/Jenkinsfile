@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script{
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                        dir("terraform") {
+                        dir("terraform/terraform_files") {
                             sh 'terraform init -input=false'
                             sh "terraform plan -input=false -out tfplan "
                             sh 'terraform show -no-color tfplan > tfplan.txt'
@@ -41,7 +41,7 @@ pipeline {
                 script {
                     if (params.Apply == true){
                         withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                            dir("terraform") {
+                            dir("terraform/terraform_files") {
                                 sh "terraform apply -input=false tfplan"
                             }
                         }
@@ -57,7 +57,7 @@ pipeline {
                 script {
                     if(params.Destroy == true){  
                         withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'my-aws-credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                            dir("terraform") {
+                            dir("terraform/terraform_files") {
                                 sh "terraform destroy --auto-approve"
                             }
                         }
