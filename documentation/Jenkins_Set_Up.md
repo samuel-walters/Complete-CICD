@@ -56,6 +56,38 @@
 > 18. For `Host Key Verification Strategy`, choose `Manually trusted key Verification Strategy`. 
 > 19. Click save, and run a build to test if it is working.
 
+## Use a Webhook to Connect Jenkins with a GitHub Repository 
+
+> 1. Create a new key in your .ssh folder on your localhost with `ssh-keygen -t rsa -b 4096 -C "your_email@example.com"`.
+> 2. Run this command on the public (.pub) key generated to copy its contents: `clip < ~/.ssh/eng110_cicd_sam.pub`.
+> 3. Go to `Settings` in the GitHub repository you want to connect with Jenkins.
+> 4. Go to `Deploy Keys`.
+> 5. Add a key, and copy the contents from the `clip` command into the box. 
+> 6. On Jenkins in your browser, create a new freestyle build.
+> 7. Remember naming conventions.
+> 8. Tick Discard old builds. Max # of builds to keep = 3.
+> 9. GitHub project - use the http link **NOT** ssh.
+> 10. Tick restrict where this project can be run.
+> 11. For Label Expression, type in the name of your worker node. In this case, I will enter `eng110-jenkins-worker` (you might need to press backspace and fiddle around with it until it recognises the label).
+> 12. For Source Code Management, choose `Git`.
+> 13. For `Repository URL`, choose the repository's **SSH** link. 
+> 14. Run this command on the private key generated to copy its contents: `clip < ~/.ssh/eng110_cicd_sam`.
+> 15. Credientials: add a new key.
+> 16. Choose SSH Keys. Give it the same name as your private key (for example eng110_cicd_sam).
+> 17. Paste the private key's contents into the box.
+> 18. Make sure it is */main and not */master (GitHub used to use master but that has since changed).
+> 19. Under `Build Triggers`, click `GitHub hook trigger for GITScm polling.
+> 20. Add some simple commands in `Execute shell`, for example `pwd`. 
+> 21. Save the Jenkins Job. 
+> 22. Go to the GitHub repository linked to your Jenkins job, and click `settings.`
+> 23. Go to your `Webhooks`.
+> 24. Click `Add webhook`.
+> 25. Use the Jenkins IP, and add `github-webhook` at the end. For example, it may look like this:
+                http://ipaddress:port/github-webhook/
+> 26. Click `Let me select individual events`, and select `push` and `pull`.
+> 27. Click `Add webhook`.
+> 28. Test your webhook by pushing a commit to your GitHub repository. This should automatically trigger the Jenkins job to run, and you will be able to look at the output and see whether the agent node ran the commands you put into the `Execute shell` section. 
+
 # Set up AWS CLI
 
 > 1. Create a job, and run these commands on your worker node in the `Execute shell` part to install AWS CLI:
