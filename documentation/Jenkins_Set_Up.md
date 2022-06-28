@@ -1,24 +1,39 @@
 # Install Jenkins on Master Node
 
-> 1. Make sure your security group allows port 8080.
-> 2. Run sudo apt-get update -y
-> 3. Visit https://pkg.jenkins.io/debian-stable/, and run the commands on there.
-> 4. Run `sudo systemctl start jenkins`.
+> 1. Choose Ubuntu 18.04 on AWS. 
+> 2. Make sure your security group allows port 8080.
+> 3. Run sudo apt-get update -y
+> 4. Visit https://pkg.jenkins.io/debian-stable/, and run the commands on there. The commands are pasted below just in case:
+```bash 
+curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
+/usr/share/keyrings/jenkins-keyring.asc > /dev/null
+
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+/etc/apt/sources.list.d/jenkins.list > /dev/null
+
+sudo apt-get update
+sudo apt-get install fontconfig openjdk-11-jre
+sudo apt-get install jenkins
+```
+
+> 5. Run `sudo systemctl start jenkins`.
 
 # Worker Node(s) Set Up
 
-> 1. Security group for workers: just allow port 22 for SSH.
-> 2. Run `sudo apt-get update -y`.
-> 3. Run `sudo apt-get install fontconfig openjdk-11-jre`. 
-> 4. Run `sudo useradd -m jenkins`.
-> 5. Run `sudo -u jenkins mkdir /home/jenkins/.ssh`.
-> 6. In your **MASTER NODE**, type in `ssh-keygen`. Copy the public key (in the ~/.ssh directory).
-> 7. In your **SLAVE NODE**, run `sudo -u jenkins nano /home/jenkins/.ssh/authorized_keys`. 
-> 8. Paste in the public key. Save and exit. 
-> 9. In your **MASTER NODE**, test the ssh connection with `ssh jenkins@ip-iphere` (take the ip from the **SLAVE NODE'**'s terminal).
-> 10. Exit by pressing ctrl + D, or entering in the word `exit`.
-> 11. In your **MASTER NODE**, type in the command `sudo cp ~/.ssh/known_hosts /var/lib/jenkins/.ssh`.
-> 12. To allow the jenkins user in the agent node to run sudo commands, type the commands `sudo su` and then `nano /etc/sudoers`. Add this line (or edit if it already exists): `jenkins ALL= NOPASSWD: ALL`. 
+> 1. Choose Ubuntu 18.04 on AWS.
+> 2. Security group for workers: just allow port 22 for SSH.
+> 3. Run `sudo apt-get update -y`.
+> 4. Run `sudo apt-get install fontconfig openjdk-11-jre`. 
+> 5. Run `sudo useradd -m jenkins`.
+> 6. Run `sudo -u jenkins mkdir /home/jenkins/.ssh`.
+> 7. In your **MASTER NODE**, type in `ssh-keygen`. Copy the public key (in the ~/.ssh directory).
+> 8. In your **SLAVE NODE**, run `sudo -u jenkins nano /home/jenkins/.ssh/authorized_keys`. 
+> 9. Paste in the public key. Save and exit. 
+> 10. In your **MASTER NODE**, test the ssh connection with `ssh jenkins@ip-iphere` (take the ip from the **SLAVE NODE'**'s terminal).
+> 11. Exit by pressing ctrl + D, or entering in the word `exit`.
+> 12. In your **MASTER NODE**, type in the command `sudo cp ~/.ssh/known_hosts /var/lib/jenkins/.ssh`.
+> 13. To allow the jenkins user in the agent node to run sudo commands, type the commands `sudo su` and then `nano /etc/sudoers`. Add this line (or edit if it already exists): `jenkins ALL= NOPASSWD: ALL`. 
 
 # Configuration Details in the Browser
 
