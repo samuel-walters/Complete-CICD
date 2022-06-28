@@ -34,7 +34,7 @@
 > 4. Add your EC2 Credentials. For `Kind`, remember to select `AWS Credentials`.
 > 5. Click apply and save.
 
-# Create an agent node
+# Connect an Agent Node
 
 > 1. Click on `Manage Jenkins` and then `Manage nodes and clouds`.
 > 2. Click on `New Node`.
