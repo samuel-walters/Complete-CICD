@@ -142,6 +142,15 @@ sudo apt-get upgrade -y
 sudo apt-get install docker.io -y
 ```
 > 2. On your Jenkins browser, go to `Manage Jenkins` and then `Plugin Manager`. Install `Docker Pipeline` (without restart).
+> 3. Go to the Dashboard, and click on `New Item`.
+> 4. After entering a new name, click on `Pipeline`.
+> 5. In the pipeline section, select `Pipeline script from SCM`. 
+> 6. Choose `Git`.
+> 7. Enter the repository where your Jenkinsfile and Dockerfile are located.
+> 8. Choose your primary branch. Check if `master` should be changed to `main`.
+> 9. For `Script Path`, enter the relative path for your `Jenkinsfile`. For this repository, the path is simply `app/Jenkinsfile`. Your screen should look something like this (but with a different GitHub repository and relative path):
+![](https://i.imgur.com/zNJqdJo.png)
+
 
 # Set Up Terraform
 
@@ -172,8 +181,7 @@ terraform -v
 > 4. Choose `Git`.
 > 5. Enter the repository where your Jenkinsfile and main.tf files are located.
 > 6. Choose your primary branch. Check if `master` should be changed to `main`.
-> 7. For `Script Path`, enter the relative path for your `Jenkinsfile` that contains the code to run your terraform commands. Your screen should look something like this (but with a different GitHub repository and relative path):
-![](https://i.imgur.com/l7gbDsE.png)
+> 7. For `Script Path`, enter the relative path for your `Jenkinsfile` that contains the code to run your terraform commands. 
 > 8. The Jenkins pipeline will require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
 
 ## Setting up Environment Variables in Jenkins for Terraform
@@ -324,8 +332,6 @@ host_key_checking = False
 > 10. Enter your GitHub Repository's URL (the same URL you used to clone the repository).
 > 11. Check whether branch should be `main` instead of `master`.
 > 12. For `Script Path`, provide the path to your Jenkinsfile.
-> 13. Your pipeline should look like something resembling the image below. Remember to  replace details such as the repository link and the relative path to the Jenkinsfile:
-![](https://i.imgur.com/sAoLAru.png)
 
 # Creating Users and Setting up Permissions
 
