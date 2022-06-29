@@ -140,7 +140,8 @@ Run `kubectl get nodes`, and you will see all of the nodes in the cluster.
 > 3. To find your new local helm repository, use the command `helm search repo`.
 > 4. To install the cluster, use this repository name in the following command: `helm install custom_name repositoryname`. For example, I would use the following command: `helm install custom-name-here custom-name-here/eng110-nodeapp`.
 
-# Useful commands for potential future use with IaC
+# Perform a Rolling Update
 
-> 1. `echo $(hostname -I | awk '{print $1}')` - This variable gets the ip address needed in the kubeadm init command.
-> 2. `kubeadm token create --print-join-command 2> /dev/null` - Prints just the join token without any accompanying errors.
+To perform a rolling update, run this command: `kubectl set image deployments/eng110-node-deployment node=samuelwalters/app:latest`. 
+
+This will update the pods without the user experiencing any downtime since the pods are incrementally updated.
