@@ -281,21 +281,21 @@ worker1 ansible_host=ec2-34-245-138-168.eu-west-1.compute.amazonaws.com ansible_
 > 8. For `build`, choose `Execute shell`.
 > 9. The syntax for the `Execute shell` box will look like this:
 ```bash
-PublicDNSName1=$(aws ec2 describe-instances \
+IP1=$(aws ec2 describe-instances \
 --filters Name=tag:Name,Values="eng110-project-kubernetes-controlplane" \
---query Reservations[*].Instances[*].PublicDnsName \
+--query Reservations[*].Instances[*].PublicIpAddress \
 --region eu-west-1 \
 --output text)
 
-PublicDNSName2=$(aws ec2 describe-instances \
+IP2=$(aws ec2 describe-instances \
 --filters Name=tag:Name,Values="eng110-project-kubernetes-worker1" \
---query Reservations[*].Instances[*].PublicDnsName \
+--query Reservations[*].Instances[*].PublicIpAddress \
 --region eu-west-1 \
 --output text)
 
-PublicDNSName3=$(aws ec2 describe-instances \
+IP3=$(aws ec2 describe-instances \
 --filters Name=tag:Name,Values="eng110-project-kubernetes-worker2" \
---query Reservations[*].Instances[*].PublicDnsName \
+--query Reservations[*].Instances[*].PublicIpAddress \
 --region eu-west-1 \
 --output text)
 
@@ -305,11 +305,11 @@ sudo tee -a /etc/ansible/hosts > /dev/null <<EOT
 localhost ansible_python_interpreter=/usr/local/bin/python3
 
 [controlplane]
-control ansible_host=${PublicDNSName1} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+control ansible_host=${IP1} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
 
 [workers]
-worker ansible_host=${PublicDNSName2} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
-worker1 ansible_host=${PublicDNSName3} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+worker ansible_host=${IP2} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+worker1 ansible_host=${IP3} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
 EOT
 ```
 > 10. Remember to replace the names of these instances. In this case, names such as `eng110-project-kubernetes-worker1` are determined by a terraform script (found at the bottom of [main.tf](https://github.com/samuel-walters/Complete-CICD/blob/main/terraform_files/main.tf) in this repository).
