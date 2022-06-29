@@ -16,7 +16,6 @@ sudo apt-get update
 sudo apt-get install fontconfig openjdk-11-jre
 sudo apt-get install jenkins
 ```
-
 > 5. Run `sudo systemctl start jenkins`.
 
 # Worker Node(s) Set Up
@@ -134,7 +133,18 @@ pipeline {
 ```
 > 3. This script relies upon the `Amazon EC2 plugin`. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to set this up.
 
-# Setting Up Terraform
+# Set Up Docker
+
+> 1. SSH into your agent node, and run these commands to install Docker (and Docker Compose):
+```bash
+sudo apt-get update -y
+sudo apt-get upgrade -y
+sudo apt-get install docker.io -y
+sudo apt install docker-compose -y
+```
+> 2. Move the folder the application resides in from your localhost to the EC2 instance. To do this, use the `scp` command. In my case, I ran this command, with `eng119.pem` being the private key used to connect to the EC2 instance: `scp -i eng119.pem -r C:/Users/samwa/OneDrive/Desktop/docker/eng110_dock ubuntu@ec2-34-253-41-33.eu-west-1.compute.amazonaws.com:~/.`. 
+
+# Set Up Terraform
 
 ## Installing Terraform
 
@@ -182,7 +192,7 @@ variable "vpc_cidr"{
 ```
 > 7. In `main.tf`, you will now be able to refer to the variable by using the syntax `var.name_of_variable`. For example, in this case, you would type `var.vpc_cidr`.
 
-# Setting Up Ansible
+# Set Up Ansible
 
 ## Installing Ansible
 
