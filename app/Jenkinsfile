@@ -1,0 +1,47 @@
+pipeline{
+    
+    agent {
+        label 'eng110-jenkins-worker'
+    }
+    
+    environment {
+        registry = "samuelwalters/app"
+        registryCredential = "docker-credentials"
+    }
+    
+    stages {
+        stage("Checkout") {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/samuel-walters/Complete-CICD']]])
+            }
+        }
+        
+        stage("Allow permission to use Docker") {
+            steps {
+                sh "sudo chown root:$USER /var/run/docker.sock"
+            }
+        }
+        
+        stage("Building our image") {
+            steps {
+                script {
+                    dir("app") {
+                        dockerImage = docker.build registry + ":latest"
+                    }
+                }
+            }
+        }
+        
+        stage ("Push image") {
+            steps {
+                script {
+                    dir("app") { 
+                        docker.withRegistry('', registryCredential) {
+                            dockerImage.push()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
