@@ -135,14 +135,13 @@ pipeline {
 
 # Set Up Docker
 
-> 1. SSH into your agent node, and run these commands to install Docker (and Docker Compose):
+> 1. SSH into your agent node, and run these commands to install Docker:
 ```bash
 sudo apt-get update -y
 sudo apt-get upgrade -y
 sudo apt-get install docker.io -y
-sudo apt install docker-compose -y
 ```
-> 2. Move the folder the application resides in from your localhost to the EC2 instance. To do this, use the `scp` command. In my case, I ran this command, with `eng119.pem` being the private key used to connect to the EC2 instance: `scp -i eng119.pem -r C:/Users/samwa/OneDrive/Desktop/docker/eng110_dock ubuntu@ec2-34-253-41-33.eu-west-1.compute.amazonaws.com:~/.`. 
+> 2. On your Jenkins browser, go to `Manage Jenkins` and then `Plugin Manager`. Install `Docker Pipeline` (without restart).
 
 # Set Up Terraform
 
