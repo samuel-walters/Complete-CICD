@@ -88,8 +88,7 @@ resource "aws_nat_gateway" "eng110-project-nat" {
   subnet_id     = "${aws_subnet.eng110-project-subnet-public.id}"
   depends_on    = [aws_internet_gateway.eng110-project-igw]
   tags = {
-    Name        = "nat"
-    Environment = "${var.environment}"
+    Name        = "eng110-project-nat"
   }
 }
 
