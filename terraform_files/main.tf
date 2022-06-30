@@ -99,7 +99,7 @@ resource "aws_subnet" "eng110-project-subnet-public" {
   vpc_id            = aws_vpc.eng110-project-vpc.id
   cidr_block        = var.subnet_cidr_public
   map_public_ip_on_launch = "true"
-  availability_zone = var.availability_zone_aws_public
+  availability_zone = var.availability_zone_aws_public_subnet
 
   tags = {
     Name = "eng110-project-subnet-public"
@@ -112,7 +112,7 @@ resource "aws_subnet" "eng110-project-subnet-private" {
   vpc_id            = aws_vpc.eng110-project-vpc.id
   cidr_block        = var.subnet_cidr_private
   map_public_ip_on_launch = "false"
-  availability_zone = var.availability_zone_aws_private
+  availability_zone = var.availability_zone_aws_private_subnet
 
   tags = {
     Name = "eng110-project-subnet-private"
