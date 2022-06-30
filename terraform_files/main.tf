@@ -138,7 +138,7 @@ resource "aws_route_table" "eng110-project-public-crt" {
 # Route table for private subnet
 
 resource "aws_route_table" "eng110-project-private-crt" {
-  vpc_id = "${aws_vpc.vpc.id}"
+  vpc_id = "${aws_vpc.eng110-project-vpc.id}"
 
   route {
     # Associated subnet can reach everywhere
