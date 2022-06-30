@@ -4,6 +4,11 @@ pipeline{
     label 'eng110-jenkins-worker'
     }
 
+    parameters {
+      booleanParam defaultValue: false, description: 'Initialise the Kubernetes cluster?', name: 'Initialise'
+      booleanParam defaultValue: true, description: 'Run rolling updates?', name: 'Rolling'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -19,7 +24,14 @@ pipeline{
             steps{
                 dir("ansible/ansible_playbooks"){
                     withCredentials([file(credentialsId: 'AnsiblePasswordForVaultFile', variable: 'PasswordFile')]) {
-                        sh 'sudo ansible-playbook run_playbooks.yml --vault-password-file ${PasswordFile}'
+                        if (params.Initialise == true) {
+                            echo "Initialising the Kubernetes Cluster"
+                            sh 'sudo ansible-playbook run_playbooks.yml --vault-password-file ${PasswordFile}'
+                        }
+                        if (params.Rolling == true) {
+                            echo "Running a rolling update"
+                            sh 'sudo ansible-playbook kubernetes_rolling_updates.yml --vault-password-file ${PasswordFile}'
+                        }
                     }
                 }
             }
