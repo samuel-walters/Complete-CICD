@@ -8,3 +8,5 @@
    - name: Running a rolling update command
      shell: |
        kubectl set image deployments/eng110-node-deployment node=samuelwalters/app:latest
+     environment:
+       KUBECONFIG: /etc/kubernetes/admin.conf
