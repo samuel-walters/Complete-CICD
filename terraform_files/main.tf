@@ -6,6 +6,7 @@ variable "subnet_cidr_public"{}
 variable "subnet_cidr_private"{}
 variable "availability_zone_aws_public_subnet"{}
 variable "availability_zone_aws_private_subnet"{}
+variable "aws_eip_id"{}
 variable "security_cidr"{}
 variable "security_port1"{}
 variable "security_port2"{}
@@ -74,17 +75,10 @@ resource "aws_internet_gateway" "eng110-project-igw" {
     }
 }
 
-# Create an elastic IP for NAT gateway
-
-resource "aws_eip" "eng110-project-nat_eip" {
-  vpc        = true
-  depends_on = [aws_internet_gateway.eng110-project-igw]
-}
-
 # Create a NAT gateway 
 
 resource "aws_nat_gateway" "eng110-project-nat" {
-  allocation_id = "${aws_eip.eng110-project-nat_eip.id}"
+  allocation_id = var.aws_eip_id
   subnet_id     = "${aws_subnet.eng110-project-subnet-public.id}"
   depends_on    = [aws_internet_gateway.eng110-project-igw]
   tags = {
