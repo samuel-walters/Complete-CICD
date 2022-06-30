@@ -278,7 +278,7 @@ resource "aws_instance" "eng110-project-kubernetes-worker1" {
   key_name = var.aws_key_name
   subnet_id = "${aws_subnet.eng110-project-subnet-private.id}"
   vpc_security_group_ids = ["${aws_security_group.eng110-project-sg.id}"]
-  associate_public_ip_address = true
+  associate_public_ip_address = false
   tags = {Name = "eng110-project-kubernetes-worker1"}
 }
 
@@ -291,6 +291,6 @@ resource "aws_instance" "eng110-project-kubernetes-worker2" {
   key_name = var.aws_key_name
   subnet_id = "${aws_subnet.eng110-project-subnet-private.id}"
   vpc_security_group_ids = ["${aws_security_group.eng110-project-sg.id}"]
-  associate_public_ip_address = true
+  associate_public_ip_address = false
   tags = {Name = "eng110-project-kubernetes-worker2"}
 }
