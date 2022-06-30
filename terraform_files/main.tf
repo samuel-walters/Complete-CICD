@@ -41,7 +41,7 @@ resource "aws_vpc" "eng110-project-vpc" {
 
 resource "aws_network_acl" "eng110-project-acl" {
   vpc_id = aws_vpc.eng110-project-vpc.id
-  subnet_ids = ["${aws_subnet.eng110-project-subnet-public.id}"]
+  subnet_ids = ["${aws_subnet.eng110-project-subnet-public.id}", "${aws_subnet.eng110-project-subnet-private.id}"]
   
   egress {
     protocol   = -1
