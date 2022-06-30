@@ -144,7 +144,7 @@ sudo apt-get install docker.io -y
 > 2. On your Jenkins browser, go to `Manage Jenkins` and then `Plugin Manager`. Install `Docker Pipeline` (without restart).
 > 3. Click on `Manage Jenkins` again, and go to `Manage Credentials`. 
 > 4. Click on `Jenkins` (global), and then click `Global credentials (unrestricted)`.
-> 5. Click `Add Credentials` on the left, and for `Kind` choose `Username and Password`.
+> 5. Click `Add Credentials` on the left, and for `Kind` choose `Username with password`.
 > 6. Enter your Docker credentials. Click `Apply` and then `Save`.
 > 7. Go to the Dashboard, and click on `New Item`.
 > 8. After entering a new name, click on `Pipeline`.

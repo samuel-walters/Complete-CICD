@@ -2,8 +2,10 @@
 
 variable "vpc_cidr"{}
 variable "nacl_cidr_block"{}
-variable "subnet_cidr"{}
-variable "availability_zone_aws"{}
+variable "subnet_cidr_public"{}
+variable "subnet_cidr_private"{}
+variable "availability_zone_aws_public_subnet"{}
+variable "availability_zone_aws_private_subnet"{}
 variable "security_cidr"{}
 variable "security_port1"{}
 variable "security_port2"{}
@@ -38,7 +40,7 @@ resource "aws_vpc" "eng110-project-vpc" {
 
 resource "aws_network_acl" "eng110-project-acl" {
   vpc_id = aws_vpc.eng110-project-vpc.id
-  subnet_ids = ["${aws_subnet.eng110-project-subnet.id}"]
+  subnet_ids = ["${aws_subnet.eng110-project-subnet-public.id}"]
   
   egress {
     protocol   = -1
@@ -63,20 +65,7 @@ resource "aws_network_acl" "eng110-project-acl" {
   }
 }
 
-# Launch a subnet
-
-resource "aws_subnet" "eng110-project-subnet" {
-  vpc_id            = aws_vpc.eng110-project-vpc.id
-  cidr_block        = var.subnet_cidr
-  map_public_ip_on_launch = "true"
-  availability_zone = var.availability_zone_aws
-
-  tags = {
-    Name = "eng110-project-subnet"
-  }
-}
-
-# Internet gateway
+# Create an internet gateway
 
 resource "aws_internet_gateway" "eng110-project-igw" {
     vpc_id = "${aws_vpc.eng110-project-vpc.id}"
@@ -85,28 +74,97 @@ resource "aws_internet_gateway" "eng110-project-igw" {
     }
 }
 
-# Route table
+# Create an elastic IP for NAT gateway
+
+resource "aws_eip" "eng110-project-nat_eip" {
+  vpc        = true
+  depends_on = [aws_internet_gateway.eng110-project-igw]
+}
+
+# Create a NAT gateway 
+
+resource "aws_nat_gateway" "eng110-project-nat" {
+  allocation_id = "${aws_eip.eng110-project-nat_eip.id}"
+  subnet_id     = "${aws_subnet.eng110-project-subnet-public.id}"
+  depends_on    = [aws_internet_gateway.eng110-project-igw]
+  tags = {
+    Name        = "nat"
+    Environment = "${var.environment}"
+  }
+}
+
+# Launch a public subnet
+
+resource "aws_subnet" "eng110-project-subnet-public" {
+  vpc_id            = aws_vpc.eng110-project-vpc.id
+  cidr_block        = var.subnet_cidr_public
+  map_public_ip_on_launch = "true"
+  availability_zone = var.availability_zone_aws_public
+
+  tags = {
+    Name = "eng110-project-subnet-public"
+  }
+}
+
+# Launch a private subnet
+
+resource "aws_subnet" "eng110-project-subnet-private" {
+  vpc_id            = aws_vpc.eng110-project-vpc.id
+  cidr_block        = var.subnet_cidr_private
+  map_public_ip_on_launch = "false"
+  availability_zone = var.availability_zone_aws_private
+
+  tags = {
+    Name = "eng110-project-subnet-private"
+  }
+}
+
+# Route table for public subnet
 
 resource "aws_route_table" "eng110-project-public-crt" {
     vpc_id = "${aws_vpc.eng110-project-vpc.id}"
     
     route {
-        # Associated subnet can reach everywhere
-        cidr_block = "0.0.0.0/0" 
-        # CRT uses this IGW to reach internet
-        gateway_id = "${aws_internet_gateway.eng110-project-igw.id}" 
+      # Associated subnet can reach everywhere
+      cidr_block = "0.0.0.0/0" 
+      # This public route table uses this IGW to reach the internet
+      gateway_id = "${aws_internet_gateway.eng110-project-igw.id}" 
     }
     
     tags = {
-        Name = "eng110-project-public-crt"
+      Name = "eng110-project-public-crt"
     }
 }
 
-# Associate CRT and Subnet
+# Route table for private subnet
 
-resource "aws_route_table_association" "eng110-project-crta-public-subnet"{
-    subnet_id = "${aws_subnet.eng110-project-subnet.id}"
+resource "aws_route_table" "eng110-project-private-crt" {
+  vpc_id = "${aws_vpc.vpc.id}"
+
+  route {
+    # Associated subnet can reach everywhere
+    cidr_block = "0.0.0.0/0" 
+    # This nat gateway allows the private subnet to access the internet
+    nat_gateway_id = "${aws_nat_gateway.eng110-project-nat.id}"
+  }
+
+  tags = {
+    Name = "eng110-project-private-crt"
+  }
+}
+
+# Associate public route table and public subnet
+
+resource "aws_route_table_association" "eng110-project-crt-public-subnet"{
+    subnet_id = "${aws_subnet.eng110-project-subnet-public.id}"
     route_table_id = "${aws_route_table.eng110-project-public-crt.id}"
+}
+
+# Associate private route table and private subnet
+
+resource "aws_route_table_association" "eng110-project-crt-private-subnet"{
+    subnet_id = "${aws_subnet.eng110-project-subnet-private.id}"
+    route_table_id = "${aws_route_table.eng110-project-private-crt.id}"
 }
 
 # Security group for Kubernetes
@@ -212,7 +270,7 @@ resource "aws_instance" "eng110-project-kubernetes-controlplane" {
   # We need two CPUs, so t2.medium will be chosen
   instance_type = "t2.medium"
   key_name = var.aws_key_name
-  subnet_id = "${aws_subnet.eng110-project-subnet.id}"
+  subnet_id = "${aws_subnet.eng110-project-subnet-public.id}"
   vpc_security_group_ids = ["${aws_security_group.eng110-project-sg.id}"]
   associate_public_ip_address = true
   tags = {Name = "eng110-project-kubernetes-controlplane"}
@@ -225,7 +283,7 @@ resource "aws_instance" "eng110-project-kubernetes-worker1" {
   # Workers only need one CPU
   instance_type = "t2.micro"
   key_name = var.aws_key_name
-  subnet_id = "${aws_subnet.eng110-project-subnet.id}"
+  subnet_id = "${aws_subnet.eng110-project-subnet-private.id}"
   vpc_security_group_ids = ["${aws_security_group.eng110-project-sg.id}"]
   associate_public_ip_address = true
   tags = {Name = "eng110-project-kubernetes-worker1"}
@@ -238,7 +296,7 @@ resource "aws_instance" "eng110-project-kubernetes-worker2" {
   # Workers only need one CPU
   instance_type = "t2.micro"
   key_name = var.aws_key_name
-  subnet_id = "${aws_subnet.eng110-project-subnet.id}"
+  subnet_id = "${aws_subnet.eng110-project-subnet-private.id}"
   vpc_security_group_ids = ["${aws_security_group.eng110-project-sg.id}"]
   associate_public_ip_address = true
   tags = {Name = "eng110-project-kubernetes-worker2"}
