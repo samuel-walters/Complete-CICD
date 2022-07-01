@@ -248,24 +248,44 @@ ec2_secret_key: keyhere
 > 12. Make sure the directory has the private key needed to SSH into the instances you wish to provision. 
 > 13. The `.ssh` directory will also require the public key. To get the public key, you can run this command: `ssh-keygen -y -f ~/.ssh/file_name.pem > ~/.ssh/file_name.pub`.
 > 14. Run the command `sudo chmod 400 eng119.pem`.
-> 15. Return to `/etc/ansible`. Type `sudo nano hosts`.
-> 16. Enter lines similar to these, specifying all the instances you want ansible to connect with and provision (remember to change relevant details such as the path to the key)
+> 15. Go to `/root/.ssh`, and type `sudo nano config`.
+> 16. Before copying and pasting the lines below, keep in mind that the bastion host should be an instance connected to a public subnet with a public IP address, while the worker nodes should be connected to a private subnet in the same VPC. Therefore, the idea is that we will connect to these private instances through the bastion host, and use their private IP addresses for the `HostName` field:
+```bash
+Host controlplane_bastion
+    HostName 3.251.99.236
+    User ubuntu
+    IdentityFile /home/jenkins/.ssh/eng119.pem
+
+Host worker1
+    ProxyJump controlplane_bastion
+    HostName 10.0.2.19
+    User ubuntu
+    IdentityFile /home/jenkins/.ssh/eng119.pem
+
+Host worker2
+    ProxyJump controlplane_bastion
+    HostName 10.0.2.227
+    User ubuntu
+    IdentityFile /home/jenkins/.ssh/eng119.pem
+```
+> 17. Return to `/etc/ansible`. Type `sudo nano hosts`.
+> 18. Enter these lines, and note how the names correspond to the ones created in `/root/.ssh/config`:
 ```
 [local]
 localhost ansible_python_interpreter=/usr/local/bin/python3
 
 [controlplane]
-control ansible_host=ec2-176-34-157-191.eu-west-1.compute.amazonaws.com ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+controlplane_bastion
 
 [workers]
-worker ansible_host=ec2-54-195-172-104.eu-west-1.compute.amazonaws.com ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
-worker1 ansible_host=ec2-34-245-138-168.eu-west-1.compute.amazonaws.com ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+worker1
+worker2
 ```
-> 17. To test it is working, create a yaml file (which will be used as an Ansible playbook) with the command `sudo touch test.yml`.
-> 18. For now, enter simple instructions such as the ones below:
+> 19. To test it is working, create a yaml file (which will be used as an Ansible playbook) with the command `sudo touch test.yml`.
+> 20. For now, enter simple instructions such as the ones below:
 ```yaml
 ---
-- hosts: controlplane
+- hosts: workers
 
   gather_facts: yes
 ```
@@ -284,23 +304,43 @@ worker1 ansible_host=ec2-34-245-138-168.eu-west-1.compute.amazonaws.com ansible_
 > 8. For `build`, choose `Execute shell`.
 > 9. The syntax for the `Execute shell` box will look like this:
 ```bash
-IP1=$(aws ec2 describe-instances \
+Public_IP1=$(aws ec2 describe-instances \
 --filters Name=tag:Name,Values="eng110-project-kubernetes-controlplane" \
 --query Reservations[*].Instances[*].PublicIpAddress \
 --region eu-west-1 \
 --output text)
 
-IP2=$(aws ec2 describe-instances \
+Private_IP1=$(aws ec2 describe-instances \
 --filters Name=tag:Name,Values="eng110-project-kubernetes-worker1" \
---query Reservations[*].Instances[*].PublicIpAddress \
+--query Reservations[*].Instances[*].PrivateIpAddress \
 --region eu-west-1 \
 --output text)
 
-IP3=$(aws ec2 describe-instances \
+Private_IP2=$(aws ec2 describe-instances \
 --filters Name=tag:Name,Values="eng110-project-kubernetes-worker2" \
---query Reservations[*].Instances[*].PublicIpAddress \
+--query Reservations[*].Instances[*].PrivateIpAddress \
 --region eu-west-1 \
 --output text)
+
+sudo rm /root/.ssh/config
+sudo tee -a /root/.ssh/config > /dev/null <<EOT
+Host controlplane_bastion
+    HostName ${Public_IP1}
+    User ubuntu
+    IdentityFile /home/jenkins/.ssh/eng119.pem
+
+Host worker1
+    ProxyJump controlplane_bastion
+    HostName ${Private_IP1}
+    User ubuntu
+    IdentityFile /home/jenkins/.ssh/eng119.pem
+
+Host worker2
+    ProxyJump controlplane_bastion
+    HostName ${Private_IP2}
+    User ubuntu
+    IdentityFile /home/jenkins/.ssh/eng119.pem
+EOT
 
 sudo rm /etc/ansible/hosts
 sudo tee -a /etc/ansible/hosts > /dev/null <<EOT
@@ -308,11 +348,11 @@ sudo tee -a /etc/ansible/hosts > /dev/null <<EOT
 localhost ansible_python_interpreter=/usr/local/bin/python3
 
 [controlplane]
-control ansible_host=${IP1} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+controlplane_bastion
 
 [workers]
-worker ansible_host=${IP2} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
-worker1 ansible_host=${IP3} ansible_user=ubuntu ansible_ssh_private_key_file=/home/jenkins/.ssh/eng119.pem
+worker1
+worker2
 EOT
 ```
 > 10. Remember to replace the names of these instances. In this case, names such as `eng110-project-kubernetes-worker1` are determined by a terraform script (found at the bottom of [main.tf](https://github.com/samuel-walters/Complete-CICD/blob/main/terraform_files/main.tf) in this repository).
