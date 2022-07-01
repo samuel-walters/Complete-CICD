@@ -82,7 +82,7 @@ Double check that you are the root user. If you are not, run the "`sudo su -`" c
 
 ### Initialize Kubernetes Cluster
 
-Run the below command, but replace the ip address and the CIDR block. The ip address should be the one you can see in your master node terminal, and the CIDR block should be the same one that the VPC uses:
+Run the below command, but replace the ip address and the CIDR block. The ip address should be the one you can see in your master node terminal, and you can pick your own CIDR block - just ensure it does not overlap with your VPC's CIDR block.
 
 `kubeadm init --apiserver-advertise-address=172.16.16.100 --pod-network-cidr=192.168.0.0/16  --ignore-preflight-errors=all`.
 
@@ -95,7 +95,7 @@ Weave Net is a resilient and simple to use network for Kubernetes. It provides a
 `kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"`
 
 #### Notes on Weave
-By default, Weave uses the CIDR block `10.32.0.0/12`. Make sure this does not overlap with the pod network CIDR block you specified in the `kubeadm init` command. For example, if you used the CIDR block `10.0.0.0/8`, this will overlap with `10.32.0.0/12` because after the first `octet`, the rest of the `octets` could change - including the second `octet` changing to 32. 
+By default, Weave uses the CIDR block `10.32.0.0/12`. Make sure this does not overlap with the pod network CIDR block you specified in the `kubeadm init` command. For example, if you used the CIDR block `10.0.0.0/8`, this will overlap with `10.32.0.0/12` because after the first `octet`, the rest of the `octets` could change. 
 
 Comprehensive documentation for integrating weave into your cluster can be found on [Weave's official website](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/).
 
