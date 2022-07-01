@@ -101,6 +101,7 @@ sudo apt-get install jenkins
 > 26. Click `Let me select individual events`, and select `push` and `pull`.
 > 27. Click `Add webhook`.
 > 28. Test your webhook by pushing a commit to your GitHub repository. This should automatically trigger the Jenkins job to run, and you will be able to look at the output and see whether the agent node ran the commands you put into the `Execute shell` section. 
+> 29. You can also trigger another project to run after this job has finished. Go to `Post-build Actions`, and for `Projects to build`, enter the project name you want to run. In this case, I will enter `upload-image`.
 
 # Set up AWS CLI
 
@@ -147,7 +148,7 @@ sudo apt-get install docker.io -y
 > 5. Click `Add Credentials` on the left, and for `Kind` choose `Username with password`.
 > 6. Enter your Docker credentials. Click `Apply` and then `Save`.
 > 7. Go to the Dashboard, and click on `New Item`.
-> 8. After entering a new name, click on `Pipeline`.
+> 8. After entering a new name such as `upload-image`, click on `Pipeline`.
 > 9. In the pipeline section, select `Pipeline script from SCM`. 
 > 10. Choose `Git`.
 > 11. Enter the repository where your Jenkinsfile and Dockerfile are located.
