@@ -43,5 +43,13 @@ pipeline{
                 }
             }
         }
+        stage ('Run ansible pipeline') {
+            steps {
+                build job: 'run_ansible', parameters: [
+                    [$class: 'BooleanParameterValue', name: 'Initialise', value: false],
+                    [$class: 'BooleanParameterValue', name: 'Rolling', value: true]
+                    ], wait: false
+            }
+        }
     }
 }
