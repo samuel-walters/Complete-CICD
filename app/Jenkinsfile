@@ -12,7 +12,11 @@ pipeline{
     stages {
         stage("Checkout") {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/samuel-walters/Complete-CICD']]])
+                script {
+                def scmVars = checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/samuel-walters/Complete-CICD']]])
+                env.GIT_COMMIT = scmVars.GIT_COMMIT
+                echo "${env.GIT_COMMIT}"
+                }
             }
         }
         
@@ -26,7 +30,7 @@ pipeline{
             steps {
                 script {
                     dir("app") {
-                        dockerImage = docker.build registry + ":latest"
+                        dockerImage = docker.build(registry + ":latest", "-t " + registry + ":\$(git rev-parse HEAD) .")
                     }
                 }
             }
@@ -37,9 +41,24 @@ pipeline{
                 script {
                     dir("app") { 
                         docker.withRegistry('', registryCredential) {
-                            dockerImage.push()
+                            dockerImage.push("latest")
+                            dockerImage.push("${env.GIT_COMMIT}")
                         }
                     }
+                }
+            }
+        }
+        
+        stage ("Create file containing the rolling update command"){
+            steps {
+                script {
+                    try {
+                        sh 'rm /home/jenkins/rolling_update.txt'
+                    } catch (err) {
+                        echo err.getMessage()
+                    }
+                    sh 'touch /home/jenkins/rolling_update.txt'
+                    sh "echo 'kubectl set image deployments/eng110-node-deployment node=samuelwalters/app:${env.GIT_COMMIT}' > /home/jenkins/rolling_update.txt"
                 }
             }
         }
