@@ -1,7 +1,7 @@
 # Install Jenkins on Master Node
 
 > 1. Choose Ubuntu 18.04 on AWS. 
-> 2. Make sure your security group allows port 8080.
+> 2. Make sure your security group allows port 8080. Also allow yourself to ssh into the instance (using port 22).
 > 3. Run sudo apt-get update -y
 > 4. Visit https://pkg.jenkins.io/debian-stable/, and run the commands on there. The commands are pasted below just in case:
 ```bash 
@@ -21,7 +21,7 @@ sudo apt-get install jenkins
 # Worker Node(s) Set Up
 
 > 1. Choose Ubuntu 18.04 on AWS.
-> 2. Security group for workers: just allow port 22 for SSH.
+> 2. Security group for workers: just allow the master node to ssh into the instance (using port 22). Allow the master node's public IP and its private IP. You should also allow your own IP to ssh in as well. 
 > 3. Run `sudo apt-get update -y`.
 > 4. Run `sudo apt-get install fontconfig openjdk-11-jre`. 
 > 5. Run `sudo useradd -m jenkins`.
