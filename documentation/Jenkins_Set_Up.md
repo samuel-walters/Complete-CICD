@@ -295,7 +295,7 @@ worker2
 
 ## Automating Set Up of Ansible Hosts File
 
-> 1. Your agent will need AWS CLI installed. View step one of the "[Set up AWS CLI](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Set-up-AWS-CLI)" section to see how to install AWS CLI.
+> 1. Your agent will need AWS CLI installed as we will use this command line interface to grab the IPs from the instances terraform spins up. View step one of the "[Set up AWS CLI](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Set-up-AWS-CLI)" section to see how to install AWS CLI.
 > 2. This automated process will also require AWS credentials. View the [Configure a Cloud](https://github.com/samuel-walters/Complete-CICD/blob/main/documentation/Jenkins_Set_Up.md#Configure-a-Cloud) section to see how to add these credentials to Jenkins.
 > 3. Click on the `Dashboard` in the Jenkins browser, and select `Freestyle project` with a name of your choice (for example `set-up-ansible-hosts`).
 > 4. Tick `Discard old builds`, and for `Max # of builds to keep` enter 3.
