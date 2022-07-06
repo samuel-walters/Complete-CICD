@@ -1,2 +1,2 @@
 # Architecture Diagram
-![](https://i.imgur.com/caWtCve.png)
+![](https://i.imgur.com/ZkPtFEg.png)
