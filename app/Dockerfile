@@ -8,9 +8,7 @@ WORKDIR /usr/src/app
 # the caching stops, and the dockerfile runs the rest of the lines as if it 
 # had never seen them before. Therefore, as this file (package.json) is unlikely to change, 
 # this means this top part of the file will be cached - and so it won't take as much time to
-# install all of the dependencies. This is why these lines are placed at the top - because otherwise if 
-# lines with changes are found, and then these line appear, docker won't use caching - 
-# and it will take a while to install the dependencies.
+# install all of the dependencies. 
 
 # This simply copies the file over to the docker container's working directory (specificed above
 # as /usr/src/app).
@@ -21,8 +19,7 @@ COPY ./package.json ./
 RUN npm install -g npm@latest
 RUN npm install express
 # Copy everything from the current working directory (the directory with the Dockerfile) over to the 
-# container's current working directory. It is very likely that there will be changes here,
-# and thus this is why "COPY ./package.json ./" and "RUN npm install" appeared above.
+# container's current working directory.
 COPY ./ ./ 
 # Allow port 3000.
 EXPOSE 3000
