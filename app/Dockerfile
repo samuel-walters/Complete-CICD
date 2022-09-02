@@ -1,5 +1,5 @@
 FROM node:alpine
-# Set the working directory
+# Set the working directory.
 WORKDIR /usr/src/app
 
 # The way a docker file works is it goes line by line, and if the image
@@ -12,10 +12,10 @@ WORKDIR /usr/src/app
 # lines with changes are found, and then these line appear, docker won't use caching - 
 # and it will take a while to install the dependencies.
 
-# This simply copies the file over to the docker container's working directory (specificed above)
-# as /usr/src/app.
+# This simply copies the file over to the docker container's working directory (specificed above
+# as /usr/src/app).
 COPY ./package.json ./
-# Installs the dependencies
+# Installs the dependencies.
 # We are able to run these npm commands (npm is a package manager)
 # as "node:alpine" comes with npm installed.
 RUN npm install -g npm@latest
@@ -24,7 +24,7 @@ RUN npm install express
 # container's current working directory. It is very likely that there will be changes here,
 # and thus this is why "COPY ./package.json ./" and "RUN npm install" appeared above.
 COPY ./ ./ 
-# Allow port 300
+# Allow port 3000.
 EXPOSE 3000
-# Start the app
+# Start the app.
 CMD ["node", "app.js"]
